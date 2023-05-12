@@ -13,6 +13,17 @@ public class Board
         _boardCanvas = boardCanvas;
     }
 
+    public void Redraw()
+    {
+        Clear();
+        Draw();
+    }
+
+    private void Clear()
+    {
+        _boardCanvas.Children.Clear();
+    }
+
     public void Draw()
     {
         DrawBoardBorders();

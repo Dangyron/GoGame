@@ -10,8 +10,8 @@ public static class Constants
     public const int CountOfCells = 19;
     public static double BoardVerticalMargin => 20;
     public static double BoardHorizontalMargin => (WindowWidth - GridLineLength) / 2;
-    public static double CellSize { get; } = WindowHeight / CountOfCells - 1;
-    public static double GridLineLength { get; } = CellSize * (CountOfCells - 1);
+    public static double CellSize => WindowHeight / CountOfCells - 2;
+    public static double GridLineLength => CellSize * (CountOfCells - 1);
 
     public static int BoardStrokeThickness => 2;
     public static Brush BoardStrokeColour { get; } = Brushes.Black;
