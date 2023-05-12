@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 using GoGame.Utility;
 
@@ -6,22 +8,13 @@ namespace GoGameApp;
 
 public class Board
 {
+    private readonly List<List<Stone>> _stones;
     private readonly Canvas _boardCanvas;
 
     public Board(Canvas boardCanvas)
     {
         _boardCanvas = boardCanvas;
-    }
-
-    public void Redraw()
-    {
-        Clear();
-        Draw();
-    }
-
-    private void Clear()
-    {
-        _boardCanvas.Children.Clear();
+        _stones = new List<List<Stone>>(Constants.CountOfCells);
     }
 
     public void Draw()
@@ -76,8 +69,8 @@ public class Board
                 _boardCanvas.Children.Add(starPoint);
                 starPoint = new Ellipse
                 {
-                    Width = 10,
-                    Height = 10,
+                    Width = Constants.BoardStarSize,
+                    Height = Constants.BoardStarSize,
                     Fill = Constants.BoardStrokeColour
                 };
             }
