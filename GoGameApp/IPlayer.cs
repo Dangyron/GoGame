@@ -1,11 +1,11 @@
-﻿namespace GoGameApp;
+﻿using System.Threading.Tasks;
+
+namespace GoGameApp;
 
 public interface IPlayer
 {
-    public Player Enemy { get; }
-    public bool IsCanMakeMove { get; }
-    public StonesColour Colour { get; }
+    public StonesColour StoneColour { get; }
     public string Name { get; }
-    void Move();
-    void Resign();
+    public bool Resign { get; }
+    Task Move();
 }

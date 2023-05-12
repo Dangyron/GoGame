@@ -1,28 +1,31 @@
-﻿namespace GoGameApp;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+namespace GoGameApp;
 
 public class Player : IPlayer
 {
-    public Player Enemy { get; }
-    
-    public bool IsCanMakeMove { get; private set; }
-    public StonesColour Colour { get; }
+    private readonly Canvas _boardCanvas;
+    public StonesColour StoneColour { get; }
     public string Name { get; }
-    
-    public Player(StonesColour colour, string name, Player enemy)
+
+    public bool Resign { get; private set; } = false;
+    private Stone _stone;
+    public Player(StonesColour stoneColour, string name, Canvas boardCanvas)
     {
-        Colour = colour;
+        _boardCanvas = boardCanvas;
+        StoneColour = stoneColour;
         Name = name;
-        Enemy = enemy;
+        _stone = new Stone(StoneColour);
     }
 
-    public void Move()
+    public async Task Move()
     {
-        IsCanMakeMove = false;
-        Enemy.IsCanMakeMove = true;
-    }
-
-    public void Resign()
-    {
-        
+        await Task.Run((() =>
+        {
+                
+        }));
     }
 }

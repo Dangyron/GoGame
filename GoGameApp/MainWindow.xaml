@@ -9,6 +9,8 @@
         MouseDown="MainWindow_OnMouseDown"
         WindowStartupLocation="CenterScreen"
         MinHeight="700" MinWidth="900"
+        Loaded="MainWindow_OnLoaded"
+        MouseMove="MainWindow_OnMouseMove"
         Title="Go">
         <WindowChrome.WindowChrome>
                 <WindowChrome CaptionHeight="5" ResizeBorderThickness="5"/>

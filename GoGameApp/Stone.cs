@@ -8,6 +8,7 @@ public class Stone
 {
     public Brush StoneColour { get; }
 
+    private Ellipse _ellipse;
     public Stone(StonesColour stoneColour)
     {
         StoneColour = stoneColour switch
@@ -15,16 +16,16 @@ public class Stone
             StonesColour.White => Constants.WhiteStone,
             _ => Constants.BlackStone
         };
-
-    }
-
-    public Ellipse GetStone()
-    {
-        return new Ellipse
+        _ellipse = new Ellipse
         {
             Width = Constants.StoneSize,
             Height = Constants.StoneSize,
             Fill = StoneColour
         };
+    }
+
+    public Ellipse GetStone()
+    {
+        return _ellipse;
     }
 }

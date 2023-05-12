@@ -20,7 +20,7 @@ public static class Constants
     public static Brush WhiteStone { get; } = Brushes.White;
     public static Brush BlackStone { get; } = Brushes.Black;
 
-    public const int StoneSize = 20;
+    public const int StoneSize = 30;
 
     public const int ToolBoxElementsSize = 20;
     public const int ToolBoxActiveElementsSize = 22;
