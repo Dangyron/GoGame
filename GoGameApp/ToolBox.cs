@@ -11,7 +11,7 @@ public class ToolBox
 {
     private readonly Canvas _boardCanvas;
     private readonly Window _thisWindow;
-
+    private WindowState _previousState;
     public ToolBox(Canvas boardCanvas, Window thisWindow)
     {
         _boardCanvas = boardCanvas;
@@ -27,17 +27,42 @@ public class ToolBox
 
     private void DrawMaximizeWindow()
     {
+        Image minus = new Image
+        {
+            Name = "Maximize",
+            Width = Constants.ToolBoxElementsSize,
+            Height = Constants.ToolBoxElementsSize,
+            Source = new BitmapImage(new Uri(_thisWindow.WindowState == WindowState.Maximized ? Constants.MinimizePath : Constants.MaximizePath)),
+        };
         
+        minus.MouseEnter += HandleIfMouseEnterImage;
+        minus.MouseLeave += HandleIfMouseLeaveImage;
+        minus.MouseDown += HandleIfMouseclickOnMaximize;
+        
+        Canvas.SetRight(minus, Constants.MaximizeImageRightPosition);
+        Canvas.SetTop(minus, Constants.ToolBoxTopPosition);
+        
+        _boardCanvas.Children.Add(minus);
+    }
+
+    private void HandleIfMouseclickOnMaximize(object sender, MouseButtonEventArgs e)
+    {
+        _thisWindow.WindowState = _thisWindow.WindowState switch
+        {
+            WindowState.Maximized => WindowState.Normal,
+            WindowState.Normal => WindowState.Maximized,
+            _ => _thisWindow.WindowState
+        };
     }
 
     private void DrawMinimizeWindow()
     {
-        Image minus = new Image
+        var minus = new Image
         {
             Name = "Minus",
             Width = Constants.ToolBoxElementsSize,
             Height = Constants.ToolBoxElementsSize,
-            Source = new BitmapImage(new Uri("""D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\minus.png""")),
+            Source = new BitmapImage(new Uri(Constants.MinusPath)),
         };
         
         minus.MouseEnter += HandleIfMouseEnterImage;
@@ -52,17 +77,26 @@ public class ToolBox
 
     private void HandleIfMouseclickOnMinus(object sender, MouseButtonEventArgs e)
     {
-        _thisWindow.WindowState = WindowState.Minimized;
+        switch (_thisWindow.WindowState)
+        {
+            case WindowState.Maximized or WindowState.Normal:
+                _previousState = _thisWindow.WindowState;
+                _thisWindow.WindowState = WindowState.Minimized;
+                break;
+            case WindowState.Minimized:
+                _thisWindow.WindowState = _previousState;
+                break;
+        }
     }
 
     private void DrawCross()
     {
-        Image cross = new Image
+        var cross = new Image
         {
             Name = "Cross",
             Width = Constants.ToolBoxElementsSize,
             Height = Constants.ToolBoxElementsSize,
-            Source = new BitmapImage(new Uri("""D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\cross.png"""))
+            Source = new BitmapImage(new Uri(Constants.CrossPath))
         };
 
         cross.MouseEnter += HandleIfMouseEnterImage;
