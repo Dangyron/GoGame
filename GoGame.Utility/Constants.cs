@@ -25,10 +25,10 @@ public static class Constants
     public const int ToolBoxElementsSize = 20;
     public const int ToolBoxActiveElementsSize = 22;
     
-    public static string CrossPath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\cross.png";
-    public static string MinusPath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\minus.png";
-    public static string MinimizePath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\minimize.png";
-    public static string MaximizePath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\maximize.png";
+    public const string CrossPath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\cross.png";
+    public const string MinusPath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\minus.png";
+    public const string MinimizePath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\minimize.png";
+    public const string MaximizePath = @"D:\riderRepos\GoGame\GoGame.Utility\Raw\Images\maximize.png";
 
     public const int CrossImageRightPosition = 15;
     public const int MaximizeImageRightPosition = 40;
