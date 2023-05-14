@@ -1,24 +1,24 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using GoGame.Utility;
 
 namespace GoGameApp;
 
 public class Player : IPlayer
 {
     private readonly Canvas _boardCanvas;
-    public StonesColour StoneColour { get; }
+    public StonesStates StoneStates { get; }
     public string Name { get; }
 
     public bool Resign { get; private set; } = false;
     private Stone _stone;
-    public Player(StonesColour stoneColour, string name, Canvas boardCanvas)
+    public Player(StonesStates stoneStates, string name, Canvas boardCanvas)
     {
         _boardCanvas = boardCanvas;
-        StoneColour = stoneColour;
+        StoneStates = stoneStates;
         Name = name;
-        _stone = new Stone(StoneColour);
+        _stone = new Stone(StoneStates);
     }
 
     public async Task Move()

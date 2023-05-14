@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using GoGame.Utility;
+using GoGame.Utility.Constants;
 
 namespace GoGameApp;
 
@@ -27,39 +28,28 @@ public class ToolBox
 
     private void DrawMaximizeWindow()
     {
-        Image minus = new Image
+        Image maximize = new Image
         {
-            Name = "Maximize",
+            Name = Constants.MaximizeName,
             Width = Constants.ToolBoxElementsSize,
             Height = Constants.ToolBoxElementsSize,
             Source = new BitmapImage(new Uri(_thisWindow.WindowState == WindowState.Maximized ? Constants.MinimizePath : Constants.MaximizePath)),
         };
         
-        minus.MouseEnter += HandleIfMouseEnterImage;
-        minus.MouseLeave += HandleIfMouseLeaveImage;
-        minus.MouseDown += HandleIfMouseclickOnMaximize;
+        maximize.MouseEnter += HandleIfMouseEnterImage;
+        maximize.MouseLeave += HandleIfMouseLeaveImage;
         
-        Canvas.SetRight(minus, Constants.MaximizeImageRightPosition);
-        Canvas.SetTop(minus, Constants.ToolBoxTopPosition);
+        Canvas.SetRight(maximize, Constants.MaximizeImageRightPosition);
+        Canvas.SetTop(maximize, Constants.ToolBoxTopPosition);
         
-        _boardCanvas.Children.Add(minus);
-    }
-
-    private void HandleIfMouseclickOnMaximize(object sender, MouseButtonEventArgs e)
-    {
-        _thisWindow.WindowState = _thisWindow.WindowState switch
-        {
-            WindowState.Maximized => WindowState.Normal,
-            WindowState.Normal => WindowState.Maximized,
-            _ => _thisWindow.WindowState
-        };
+        _boardCanvas.Children.Add(maximize);
     }
 
     private void DrawMinimizeWindow()
     {
         var minus = new Image
         {
-            Name = "Minus",
+            Name = Constants.MinusName,
             Width = Constants.ToolBoxElementsSize,
             Height = Constants.ToolBoxElementsSize,
             Source = new BitmapImage(new Uri(Constants.MinusPath)),
@@ -93,7 +83,7 @@ public class ToolBox
     {
         var cross = new Image
         {
-            Name = "Cross",
+            Name = Constants.CrossName,
             Width = Constants.ToolBoxElementsSize,
             Height = Constants.ToolBoxElementsSize,
             Source = new BitmapImage(new Uri(Constants.CrossPath))

@@ -3,10 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         SizeChanged="ChangeWindowSize"
         Icon="https://thumbs.dreamstime.com/z/print-177674051.jpg"
-        WindowState="Maximized"
         WindowStyle="None"
         AllowsTransparency="True"
-        MouseDown="MainWindow_OnMouseDown"
         WindowStartupLocation="CenterScreen"
         MinHeight="700" MinWidth="900"
         Loaded="MainWindow_OnLoaded"
@@ -16,5 +14,5 @@
                 <WindowChrome CaptionHeight="5" ResizeBorderThickness="5"/>
         </WindowChrome.WindowChrome>
        
-        <Canvas x:Name="BoardCanvas"/>
+        <Canvas x:Name="BoardCanvas" MouseLeftButtonDown="BoardCanvas_OnMouseLeftButtonDown"/>
 </Window>

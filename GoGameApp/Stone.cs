@@ -1,31 +1,24 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows;
 using System.Windows.Shapes;
 using GoGame.Utility;
+using GoGame.Utility.Constants;
 
 namespace GoGameApp;
 
 public class Stone
 {
-    public Brush StoneColour { get; }
-
-    private Ellipse _ellipse;
-    public Stone(StonesColour stoneColour)
+    public StonesStates StoneStates { get; }
+    
+    public Ellipse Imagination { get; }
+    public Stone(StonesStates stoneStates)
     {
-        StoneColour = stoneColour switch
-        {
-            StonesColour.White => Constants.WhiteStone,
-            _ => Constants.BlackStone
-        };
-        _ellipse = new Ellipse
+        StoneStates = stoneStates;
+        Imagination = new Ellipse
         {
             Width = Constants.StoneSize,
             Height = Constants.StoneSize,
-            Fill = StoneColour
+            Fill = StoneStates.ConvertStonesColourToBrush()
         };
-    }
-
-    public Ellipse GetStone()
-    {
-        return _ellipse;
     }
 }
