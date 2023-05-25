@@ -48,11 +48,9 @@ public class Player : IPlayer
         var position = e.GetPosition(_board.BoardCanvas);
         
         var nearest = position.GetNearestPosition();
-
-        bool isInBoard = !nearest.Equals(Constants.UndefinedPoint);
         
         UpdateEllipseColour(nearest);
-        if (!isInBoard)
+        if (!nearest.Equals(Constants.UndefinedPoint))
             return;
         
         Canvas.SetLeft(Mouse, nearest.X - Constants.StoneSize / 2.0);

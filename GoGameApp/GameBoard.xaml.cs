@@ -20,6 +20,6 @@ public partial class GameBoard
 
     private void GameBoard_OnLoaded(object sender, RoutedEventArgs e)
     {
-        _gameController.StartGame(default);
+        _ = _gameController.StartGame(default);
     }
 }
