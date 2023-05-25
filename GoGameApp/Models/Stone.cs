@@ -1,10 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Shapes;
+﻿using System.Windows.Shapes;
 using GoGame.Utility;
 using GoGame.Utility.Constants;
+using GoGame.Utility.Helpers;
 
-namespace GoGameApp;
+namespace GoGameApp.Models;
 
 public class Stone
 {

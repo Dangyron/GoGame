@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <Compile Update="AssemblyInfo.cs">
-        <DependentUpon>MainWindow.xaml</DependentUpon>
+        <DependentUpon>GameBoard.xaml</DependentUpon>
       </Compile>
     </ItemGroup>
 

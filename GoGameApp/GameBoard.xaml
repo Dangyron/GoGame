@@ -1,0 +1,12 @@
+﻿<Window x:Class="GoGameApp.GameBoard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dc="clr-namespace:GoGame.Utility.Constants;assembly=GoGame.Utility"
+        SizeChanged="ChangeWindowSize"
+        WindowStyle="ThreeDBorderWindow"
+        Icon="https://thumbs.dreamstime.com/z/print-177674051.jpg"
+        WindowStartupLocation="CenterScreen"
+        MinHeight="780" MinWidth="1440"
+        Height="780" Width="1440" Title="Go">
+        <Canvas x:Name="BoardCanvas" MouseLeftButtonDown="BoardCanvas_OnMouseLeftButtonDown"/>
+</Window>

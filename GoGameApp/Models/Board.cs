@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using GoGame.Utility;
 using GoGame.Utility.Constants;
+using GoGame.Utility.Helpers;
 
-namespace GoGameApp;
+namespace GoGameApp.Models;
 
 public class Board
 {
@@ -60,17 +60,13 @@ public class Board
 
     public bool AddStone(Stone stone, Point point)
     {
-        StoneIndexer position;
-        try
-        {
-            position = point.ConvertPositionToIndexers();
-        }
-        catch (Exception e)
+        var position = point.ConvertPositionToIndexers();;
+
+        if (position.Equals(Constants.UndefinedIndexer))
         {
             return false;
         }
         
-
         if (_stones[position.I][position.J].StoneStates == StonesStates.Empty)
         {
             _stones[position.I][position.J] = stone;
@@ -88,9 +84,9 @@ public class Board
             var verticalLine = new Line
             {
                 X1 = i * Constants.CellSize + Constants.BoardHorizontalMargin,
-                Y1 = Math.Max(Constants.BoardVerticalMargin, Constants.ToolBoxActiveElementsSize),
+                Y1 = Constants.BoardVerticalMargin,
                 X2 = i * Constants.CellSize + Constants.BoardHorizontalMargin,
-                Y2 = Constants.GridLineLength + Math.Max(Constants.BoardVerticalMargin, Constants.ToolBoxActiveElementsSize),
+                Y2 = Constants.GridLineLength + Constants.BoardVerticalMargin,
                 Stroke = Constants.BoardStrokeColour,
                 StrokeThickness = Constants.BoardStrokeThickness
             };
@@ -99,9 +95,9 @@ public class Board
             var horizontalLine = new Line
             {
                 X1 = Constants.BoardHorizontalMargin,
-                Y1 = i * Constants.CellSize + Math.Max(Constants.BoardVerticalMargin, Constants.ToolBoxActiveElementsSize),
+                Y1 = i * Constants.CellSize + Constants.BoardVerticalMargin,
                 X2 = Constants.GridLineLength + Constants.BoardHorizontalMargin,
-                Y2 = i * Constants.CellSize + Math.Max(Constants.BoardVerticalMargin, Constants.ToolBoxActiveElementsSize),
+                Y2 = i * Constants.CellSize + Constants.BoardVerticalMargin,
                 Stroke = Constants.BoardStrokeColour,
                 StrokeThickness = Constants.BoardStrokeThickness
             };

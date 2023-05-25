@@ -1,16 +1,19 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Media;
 
-namespace GoGame.Utility;
+namespace GoGame.Utility.Helpers;
 
 public static class StonesHelper
 {
+    private static readonly List<Point> _allPossiblePoints = new();
     public static StonesStates GetNextColour(this StonesStates states)
     {
         return states switch
         {
             StonesStates.Black => StonesStates.White,
             StonesStates.White => StonesStates.Black,
+            StonesStates.Empty => throw new InvalidEnumArgumentException(nameof(states)),
             _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
         };
     }
@@ -25,10 +28,32 @@ public static class StonesHelper
             _ => throw new ArgumentOutOfRangeException(nameof(stonesStates), stonesStates, null)
         };
     }
-
+    public static Brush ConvertStonesColourToMouse(this StonesStates stonesStates)
+    {
+        return stonesStates switch
+        {
+            StonesStates.White => Constants.Constants.MouseWhiteStone,
+            StonesStates.Black => Constants.Constants.MouseBlackStone,
+            StonesStates.Empty => throw new InvalidEnumArgumentException(nameof(stonesStates)),
+            _ => throw new ArgumentOutOfRangeException(nameof(stonesStates), stonesStates, null)
+        };
+    }
     public static List<Point> GetAllPossiblePoints()
     {
-        List<Point> points = new();
+        if (_allPossiblePoints.Count != 0)
+        {
+            var point = new Point
+            {
+                X = Constants.Constants.BoardHorizontalMargin + Constants.Constants.CellSize,
+                Y = Constants.Constants.BoardVerticalMargin + Constants.Constants.CellSize
+            };
+
+            if (point == _allPossiblePoints[0])
+                return _allPossiblePoints;
+
+            _allPossiblePoints.Clear();
+        }
+        
         for (int i = 0; i < Constants.Constants.CountOfCells; i++)
         {
             for (int j = 0; j < Constants.Constants.CountOfCells; j++)
@@ -39,23 +64,38 @@ public static class StonesHelper
                     Y = Constants.Constants.BoardVerticalMargin + i * Constants.Constants.CellSize
                 };
 
-                points.Add(point);
+                _allPossiblePoints.Add(point);
             }
         }
 
-        return points;
+        return _allPossiblePoints;
     }
 
-    public static StoneIndexer ConvertPositionToIndexers(this Point point)
+    public static Point GetNearestPosition(this Point point)
     {
         var points = GetAllPossiblePoints();
-        int i = 0;
+        
+        foreach (var pt in points)
+        {
+            double currMinLength = Math.Sqrt(
+                (pt.X - point.X) *
+                (pt.X - point.X) +
+                (pt.Y - point.Y) *
+                (pt.Y - point.Y));
+
+            if (currMinLength <= Constants.Constants.StoneSize / 2.0)
+            {
+                return pt;
+            }
+        }
+
+        return Constants.Constants.UndefinedPoint;
+    }
+    public static (int I, int J) ConvertPositionToIndexers(this Point point)
+    {
+        var points = GetAllPossiblePoints();
+        var i = 0;
         int j = -1;
-        double minLength = Math.Sqrt(
-            (points[0].X - point.X) *
-            (points[0].X - point.X) +
-            (points[0].Y - point.Y) *
-            (points[0].Y - point.Y));
 
         foreach (var pt in points)
         {
@@ -72,15 +112,12 @@ public static class StonesHelper
                 (pt.Y - point.Y) *
                 (pt.Y - point.Y));
 
-            if (currMinLength > minLength) continue;
             if (currMinLength <= Constants.Constants.StoneSize / 2.0)
             {
-                return new StoneIndexer { I = i, J = j };
+                return (i, j);
             }
-
-            minLength = currMinLength;
         }
 
-        throw new ArgumentOutOfRangeException(nameof(point));
+        return Constants.Constants.UndefinedIndexer;
     }
 }
