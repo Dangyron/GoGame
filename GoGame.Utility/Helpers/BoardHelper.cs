@@ -9,9 +9,4 @@ public static class BoardHelper
         ellipse.Width = Constants.Constants.StoneSize;
         ellipse.Height = Constants.Constants.StoneSize;
     }
-
-    public static void UpdateStoneColour(this Ellipse ellipse)
-    {
-        
-    }
 }
