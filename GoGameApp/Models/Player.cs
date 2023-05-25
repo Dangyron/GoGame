@@ -10,7 +10,7 @@ public class Player : IPlayer
     private readonly Board _board;
     public StonesStates StoneColour { get; }
     public string Name { get; }
-    
+
     public bool Resign { get; private set; } = false;
     public bool HasMouse => true;
     private Stone _stone;
@@ -33,26 +33,27 @@ public class Player : IPlayer
 
     public async Task Move()
     {
-        ActivateMouse();
         _moveCompletionSource = new TaskCompletionSource<bool>();
 
         _board.BoardCanvas.MouseMove += MouseMoveHandler;
-        
         _board.BoardCanvas.MouseLeftButtonDown += LeftButtonClickHandler;
-        
+
         await _moveCompletionSource.Task;
     }
 
     private void MouseMoveHandler(object sender, MouseEventArgs e)
     {
         var position = e.GetPosition(_board.BoardCanvas);
-        
         var nearest = position.GetNearestPosition();
         
-        UpdateEllipseColour(nearest);
-        if (!nearest.Equals(Constants.UndefinedPoint))
+        if (!position.IsMouseOnBoard() || nearest == Constants.UndefinedPoint)
+        {
+            DeactivateMouse();
             return;
+        }
         
+        UpdateEllipseColour(nearest);
+
         Canvas.SetLeft(Mouse, nearest.X - Constants.StoneSize / 2.0);
         Canvas.SetTop(Mouse, nearest.Y - Constants.StoneSize / 2.0);
     }
@@ -61,18 +62,19 @@ public class Player : IPlayer
     {
         var mousePosition = e.GetPosition(_board.BoardCanvas);
         if (!(mousePosition.X > Constants.BoardHorizontalMargin - Constants.StoneSize)
-            || !(mousePosition.X < Constants.BoardHorizontalMargin + Constants.StoneSize + Constants.GridLineLength)) return;
+            || !(mousePosition.X <
+                 Constants.BoardHorizontalMargin + Constants.StoneSize + Constants.GridLineLength)) return;
 
         if (!_board.AddStone(_stone, mousePosition)) return;
-        
+
         _stone = new Stone(StoneColour);
-            
+
         _board.BoardCanvas.MouseLeftButtonDown -= LeftButtonClickHandler;
         _board.BoardCanvas.MouseMove -= MouseMoveHandler;
         _moveCompletionSource!.SetResult(true);
         DeactivateMouse();
     }
-    
+
     private void UpdateEllipseColour(Point position)
     {
         if (!_board.ContainsStoneAtThisPosition(position))
@@ -84,11 +86,6 @@ public class Player : IPlayer
         Mouse.Fill = Constants.EmptyStone;
     }
 
-    private void ActivateMouse()
-    {
-        Mouse.Fill = StoneColour.ConvertStonesColourToMouseBrush();
-    }
-    
     private void DeactivateMouse()
     {
         Mouse.Fill = Constants.EmptyStone;
