@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace GoGame.Utility.Helpers;
 
 public static class StonesHelper
 {
-    private static readonly List<Point> _allPossiblePoints = new();
+    private static readonly List<Point> AllPossiblePoints = new();
+
     public static StonesStates GetNextColour(this StonesStates states)
     {
         return states switch
@@ -28,7 +30,7 @@ public static class StonesHelper
             _ => throw new ArgumentOutOfRangeException(nameof(stonesStates), stonesStates, null)
         };
     }
-    public static Brush ConvertStonesColourToMouse(this StonesStates stonesStates)
+    public static Brush ConvertStonesColourToMouseBrush(this StonesStates stonesStates)
     {
         return stonesStates switch
         {
@@ -38,9 +40,10 @@ public static class StonesHelper
             _ => throw new ArgumentOutOfRangeException(nameof(stonesStates), stonesStates, null)
         };
     }
-    public static List<Point> GetAllPossiblePoints()
+
+    private static List<Point> GetAllPossiblePoints()
     {
-        if (_allPossiblePoints.Count != 0)
+        if (AllPossiblePoints.Count != 0)
         {
             var point = new Point
             {
@@ -48,10 +51,10 @@ public static class StonesHelper
                 Y = Constants.Constants.BoardVerticalMargin + Constants.Constants.CellSize
             };
 
-            if (point == _allPossiblePoints[0])
-                return _allPossiblePoints;
+            if (point == AllPossiblePoints[0])
+                return AllPossiblePoints;
 
-            _allPossiblePoints.Clear();
+            AllPossiblePoints.Clear();
         }
         
         for (int i = 0; i < Constants.Constants.CountOfCells; i++)
@@ -64,11 +67,11 @@ public static class StonesHelper
                     Y = Constants.Constants.BoardVerticalMargin + i * Constants.Constants.CellSize
                 };
 
-                _allPossiblePoints.Add(point);
+                AllPossiblePoints.Add(point);
             }
         }
 
-        return _allPossiblePoints;
+        return AllPossiblePoints;
     }
 
     public static Point GetNearestPosition(this Point point)
@@ -119,5 +122,11 @@ public static class StonesHelper
         }
 
         return Constants.Constants.UndefinedIndexer;
+    }
+
+    public static void UpdateSize(this Ellipse ellipse)
+    {
+        ellipse.Width = Constants.Constants.StoneSize;
+        ellipse.Height = Constants.Constants.StoneSize;
     }
 }

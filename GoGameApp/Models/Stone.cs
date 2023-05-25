@@ -5,7 +5,7 @@ using GoGame.Utility.Helpers;
 
 namespace GoGameApp.Models;
 
-public class Stone
+public readonly struct Stone
 {
     public StonesStates StoneStates { get; }
     

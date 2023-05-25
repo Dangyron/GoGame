@@ -22,7 +22,6 @@ public class Board
 
     private void InitPoints()
     {
-        var keys = StonesHelper.GetAllPossiblePoints();
         for (var i = 0; i < Constants.CountOfCells; i++)
         {
             _stones.Add(new List<Stone>(Constants.CountOfCells));
@@ -51,6 +50,8 @@ public class Board
                     X = Constants.BoardHorizontalMargin + j * Constants.CellSize - Constants.StoneSize / 2.0,
                     Y = Constants.BoardVerticalMargin + i * Constants.CellSize - Constants.StoneSize / 2.0
                 };
+                _stones[i][j].Imagination.UpdateSize();
+
                 Canvas.SetLeft(_stones[i][j].Imagination, position.X);
                 Canvas.SetTop(_stones[i][j].Imagination, position.Y);
                 _boardCanvas.Children.Add(_stones[i][j].Imagination);
@@ -60,7 +61,7 @@ public class Board
 
     public bool AddStone(Stone stone, Point point)
     {
-        var position = point.ConvertPositionToIndexers();;
+        var position = point.ConvertPositionToIndexers();
 
         if (position.Equals(Constants.UndefinedIndexer))
         {

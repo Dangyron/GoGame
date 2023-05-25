@@ -11,6 +11,8 @@ public partial class GameBoard
         InitializeComponent();
         BoardCanvas.Background = Constants.BoardBackGroundColour;
         _gameController = new GameController(BoardCanvas);
+        MouseMove += _gameController.GameController_OnMouseMove;
+        MouseLeftButtonDown += _gameController.BoardCanvas_OnMouseLeftButtonDown;
     }
 
     private void ChangeWindowSize(object sender, SizeChangedEventArgs e)
