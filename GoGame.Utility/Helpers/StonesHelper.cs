@@ -123,10 +123,4 @@ public static class StonesHelper
 
         return Constants.Constants.UndefinedIndexer;
     }
-
-    public static void UpdateSize(this Ellipse ellipse)
-    {
-        ellipse.Width = Constants.Constants.StoneSize;
-        ellipse.Height = Constants.Constants.StoneSize;
-    }
 }

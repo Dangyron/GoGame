@@ -1,13 +1,16 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows.Shapes;
 using GoGame.Utility;
 
 namespace GoGameApp.Models;
 
 public interface IPlayer
 {
-    public StonesStates StoneStates { get; }
+    public StonesStates StoneColour { get; }
     public string Name { get; }
     public bool Resign { get; }
-    Task Move(Point point);
+    
+    public bool HasMouse { get; }
+    
+    public Ellipse Mouse { get; }
+    Task Move();
 }

@@ -1,25 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Shapes;
+﻿using System.Windows.Shapes;
 using GoGame.Utility;
-using GoGame.Utility.Constants;
-using GoGame.Utility.Helpers;
 
 namespace GoGameApp.Models;
 
 public class Board
 {
     private readonly List<List<Stone>> _stones;
-    private readonly Canvas _boardCanvas;
+    public Canvas BoardCanvas { get; }
     public Board(Canvas boardCanvas)
     {
-        _boardCanvas = boardCanvas;
+        BoardCanvas = boardCanvas;
         _stones = new List<List<Stone>>(Constants.CountOfCells);
         
         InitPoints();
     }
 
+    public bool ContainsStoneAtThisPosition(Point position)
+    {
+        var indexer = position.ConvertPositionToIndexers();
+
+        if (indexer == Constants.UndefinedIndexer)
+            return false;
+        
+        return _stones[indexer.I][indexer.J].StoneStates != StonesStates.Empty;
+    }
+    
     private void InitPoints()
     {
         for (var i = 0; i < Constants.CountOfCells; i++)
@@ -50,11 +55,11 @@ public class Board
                     X = Constants.BoardHorizontalMargin + j * Constants.CellSize - Constants.StoneSize / 2.0,
                     Y = Constants.BoardVerticalMargin + i * Constants.CellSize - Constants.StoneSize / 2.0
                 };
-                _stones[i][j].Imagination.UpdateSize();
+                _stones[i][j].Imagination.UpdateStoneSize();
 
                 Canvas.SetLeft(_stones[i][j].Imagination, position.X);
                 Canvas.SetTop(_stones[i][j].Imagination, position.Y);
-                _boardCanvas.Children.Add(_stones[i][j].Imagination);
+                BoardCanvas.Children.Add(_stones[i][j].Imagination);
             }
         }
     }
@@ -91,7 +96,7 @@ public class Board
                 Stroke = Constants.BoardStrokeColour,
                 StrokeThickness = Constants.BoardStrokeThickness
             };
-            _boardCanvas.Children.Add(verticalLine);
+            BoardCanvas.Children.Add(verticalLine);
 
             var horizontalLine = new Line
             {
@@ -102,7 +107,7 @@ public class Board
                 Stroke = Constants.BoardStrokeColour,
                 StrokeThickness = Constants.BoardStrokeThickness
             };
-            _boardCanvas.Children.Add(horizontalLine);
+            BoardCanvas.Children.Add(horizontalLine);
         }
     }
 
@@ -123,9 +128,9 @@ public class Board
                     3 * Constants.CellSize * (1 + j * 2) + Constants.BoardHorizontalMargin -
                     Constants.BoardStarSize / 2.0);
                 Canvas.SetTop(starPoint,
-                    3 * Constants.CellSize * (1 + i * 2) + +Constants.BoardVerticalMargin -
+                    3 * Constants.CellSize * (1 + i * 2) + Constants.BoardVerticalMargin -
                     Constants.BoardStarSize / 2.0);
-                _boardCanvas.Children.Add(starPoint);
+                BoardCanvas.Children.Add(starPoint);
                 starPoint = new Ellipse
                 {
                     Width = Constants.BoardStarSize,
