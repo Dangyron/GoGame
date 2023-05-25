@@ -8,5 +8,5 @@
         WindowStartupLocation="CenterScreen"
         MinHeight="780" MinWidth="1440"
         Height="780" Width="1440" Title="Go">
-        <Canvas x:Name="BoardCanvas" MouseLeftButtonDown="BoardCanvas_OnMouseLeftButtonDown"/>
+        <Canvas x:Name="BoardCanvas"/>
 </Window>

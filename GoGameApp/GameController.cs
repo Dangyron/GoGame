@@ -21,12 +21,12 @@ public class GameController
     private Ellipse _ellipse;
     private static bool _isGameOver = false;
 
-    public GameController(Canvas BoardCanvas, Board board)
+    public GameController(Canvas BoardCanvas)
     {
         _boardCanvas = BoardCanvas;
-        _board = board;
-        _firstPlayer = new Player(StonesStates.Black, "As", board);
-        _secondPlayer = new Player(StonesStates.White, "As", board);
+        _board = new Board(BoardCanvas);
+        _firstPlayer = new Player(StonesStates.Black, "As", _board);
+        _secondPlayer = new Player(StonesStates.White, "As", _board);
         
         _ellipse = new Ellipse
         {
@@ -41,8 +41,8 @@ public class GameController
     {
         while (!_isGameOver)
         {
-            //await firstPlayer.Move();
-            //await secondPlayer.Move();
+            //await _firstPlayer.Move(); 
+            //await _secondPlayer.Move();
             _isGameOver = true;
         }
     }
@@ -61,12 +61,24 @@ public class GameController
             Canvas.SetTop(_ellipse, nearest.Y - Constants.StoneSize / 2.0);
         }
 
-        if (position.X < Constants.BoardHorizontalMargin - Constants.StoneSize
-            || position.X > Constants.BoardHorizontalMargin + Constants.GridLineLength + Constants.StoneSize)
-            return;
+    }
+    
+    public void UpdateBoard()
+    {
+        _boardCanvas.Children.Clear();
+        _board.Draw();
+    }
+    private void BoardCanvas_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var mousePosition = e.GetPosition(_boardCanvas);
+        if (!(mousePosition.X > Constants.BoardHorizontalMargin - Constants.StoneSize)
+            || !(mousePosition.X < Constants.BoardHorizontalMargin + Constants.StoneSize + Constants.GridLineLength)) return;
+
+        if (!_board.AddStone(_stone, mousePosition)) return;
         
-        if (position.Y < Constants.BoardVerticalMargin - Constants.StoneSize
-            || position.Y > Constants.BoardVerticalMargin + Constants.GridLineLength + Constants.StoneSize)
-            return;
+        _stonesStates = _stonesStates.GetNextColour();
+        _stone = new Stone(_stonesStates);
+       
+        UpdateBoard();
     }
 }
