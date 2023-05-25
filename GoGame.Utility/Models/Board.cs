@@ -5,13 +5,14 @@ namespace GoGameApp.Models;
 
 public class Board
 {
+    private readonly List<List<Stone>> _prevStones;
     private readonly List<List<Stone>> _stones;
     public Canvas BoardCanvas { get; }
     public Board(Canvas boardCanvas)
     {
         BoardCanvas = boardCanvas;
         _stones = new List<List<Stone>>(Constants.CountOfCells);
-        
+        _prevStones = new List<List<Stone>>(Constants.CountOfCells);
         InitPoints();
     }
 
@@ -30,9 +31,12 @@ public class Board
         for (var i = 0; i < Constants.CountOfCells; i++)
         {
             _stones.Add(new List<Stone>(Constants.CountOfCells));
+            _prevStones.Add(new List<Stone>(Constants.CountOfCells));
+            
             for (var j = 0; j < Constants.CountOfCells; j++)
             {
                 _stones[i].Add(new Stone(StonesStates.Empty));
+                _prevStones[i].Add(new Stone(StonesStates.Empty));
             }
         }
     }
@@ -75,7 +79,17 @@ public class Board
         
         if (_stones[position.I][position.J].StoneStates == StonesStates.Empty)
         {
+            var tmp = _stones[position.I][position.J];
             _stones[position.I][position.J] = stone;
+
+            if (_stones == _prevStones)
+            {
+                _stones[position.I][position.J] = tmp;
+                Notification.PositionRepetition();
+                return false;
+            }
+
+            _prevStones[position.I][position.J] = stone;
             return true;
         }
         Notification.InvalidMove();

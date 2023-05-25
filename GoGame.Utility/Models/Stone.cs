@@ -1,5 +1,6 @@
 ﻿using System.Windows.Shapes;
 using GoGame.Utility;
+using GoGame.Utility.Constants;
 
 namespace GoGameApp.Models;
 

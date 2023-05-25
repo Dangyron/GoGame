@@ -61,9 +61,7 @@ public class Player : IPlayer
     private void LeftButtonClickHandler(object sender, MouseButtonEventArgs e)
     {
         var mousePosition = e.GetPosition(_board.BoardCanvas);
-        if (!(mousePosition.X > Constants.BoardHorizontalMargin - Constants.StoneSize)
-            || !(mousePosition.X <
-                 Constants.BoardHorizontalMargin + Constants.StoneSize + Constants.GridLineLength)) return;
+        if (!mousePosition.IsMouseOnBoard()) return;
 
         if (!_board.AddStone(_stone, mousePosition)) return;
 
