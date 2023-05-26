@@ -15,5 +15,5 @@ public static partial class Constants
     public static int StoneSize => (int)CellSize;
 
     public static Point UndefinedPoint { get; } = new() { X = -1, Y = -1 };
-    public static (int I, int J) UndefinedIndexer { get; } = (-1, -1);
+    public static StoneIndexer UndefinedIndexer { get; } = new(){ I = -1, J = -1};
 }
