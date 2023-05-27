@@ -9,12 +9,16 @@ public class Board
 {
     private readonly StonesList _prevStones;
     private readonly StonesList _stones;
+    private readonly List<StonesGroup> _groups;
+    public event Action<int>? StoneCaptured;
+    
     public Canvas BoardCanvas { get; }
     public Board(Canvas boardCanvas)
     {
         BoardCanvas = boardCanvas;
         _stones = new ();
         _prevStones = new ();
+        _groups = new List<StonesGroup>();
     }
 
     public bool ContainsStoneAtThisPosition(Point position)
@@ -58,11 +62,18 @@ public class Board
     {
         var position = point.ConvertPositionToIndexers();
         
-        if (_stones.CheckAllRules(stone, position, _prevStones))
+        if (_stones.CheckPlacingRules(stone, position))
         {
-            _stones[position.I][position.J] = stone;
+            if (!_stones.TryAddToGroup(_groups, position))
+                return false;
+            
+            foreach (var group in _groups.CaptureStones(_stones, stone.StoneStates, position))
+            {
+                _stones.RemoveGroup(group);
+            }
 
-            _prevStones[position.I][position.J] = stone;
+            _groups.RemoveAll(i => i.Count == 0);
+            
             return true;
         }
 

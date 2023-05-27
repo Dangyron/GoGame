@@ -1,13 +1,14 @@
 ﻿using System.Windows.Shapes;
-using GoGame.Utility;
 
-namespace GoGameApp.Models;
+namespace GoGame.Utility.Models;
 
 public interface IPlayer
 {
     public StonesStates StoneColour { get; }
     public string Name { get; }
     public bool Resign { get; }
+    
+    public int CapturedStones { get; }
     
     public bool HasMouse { get; }
     

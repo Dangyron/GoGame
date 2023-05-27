@@ -1,5 +1,5 @@
 ﻿using GoGame.Utility;
-using GoGameApp.Models;
+using GoGame.Utility.Models;
 
 namespace GoGameApp;
 

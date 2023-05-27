@@ -13,7 +13,7 @@ public static class BoardHelper
 
     public static bool IsMouseOnBoard(this Point position)
     {
-        return position.X >= Constants.Constants.BoardHorizontalMargin - Constants.Constants.StoneSize / 2
-               && position.X <= Constants.Constants.BoardHorizontalMargin + Constants.Constants.GridLineLength + Constants.Constants.StoneSize / 2;
+        return position.X >= Constants.Constants.BoardHorizontalMargin - Constants.Constants.StoneSize / 2.0
+               && position.X <= Constants.Constants.BoardHorizontalMargin + Constants.Constants.GridLineLength + Constants.Constants.StoneSize / 2.0;
     }
 }

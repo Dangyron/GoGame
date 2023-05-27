@@ -7,14 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="PresentationCore">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\7.0.5\PresentationCore.dll</HintPath>
-      </Reference>
+        <Reference Include="PresentationCore">
+            <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\7.0.5\PresentationCore.dll</HintPath>
+        </Reference>
         <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Folder Include="Raw\Images" />
+        <Folder Include="Raw\Images" />
+        <Folder Include="Constants" />
     </ItemGroup>
 
 </Project>
