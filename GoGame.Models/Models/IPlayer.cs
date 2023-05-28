@@ -1,6 +1,7 @@
 ﻿using System.Windows.Shapes;
+using GoGame.Utility;
 
-namespace GoGame.Utility.Models;
+namespace GoGame.Models.Models;
 
 public interface IPlayer
 {

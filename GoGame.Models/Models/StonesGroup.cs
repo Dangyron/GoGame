@@ -1,6 +1,7 @@
 ﻿using System.Collections;
+using GoGame.Utility;
 
-namespace GoGame.Utility.Models;
+namespace GoGame.Models.Models;
 
 public class StonesGroup : IEnumerable<StoneIndexer>, ICloneable
 {

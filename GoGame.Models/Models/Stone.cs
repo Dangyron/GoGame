@@ -1,7 +1,8 @@
 ﻿using System.Windows.Shapes;
-using GoGame.Utility.Helpers;
+using GoGame.Models.Helpers;
+using GoGame.Utility;
 
-namespace GoGame.Utility.Models;
+namespace GoGame.Models.Models;
 
 public readonly struct Stone
 {
@@ -13,8 +14,8 @@ public readonly struct Stone
         StoneStates = stoneStates;
         Imagination = new Ellipse
         {
-            Width = Constants.Constants.StoneSize,
-            Height = Constants.Constants.StoneSize,
+            Width = Utility.Constants.Constants.StoneSize,
+            Height = Utility.Constants.Constants.StoneSize,
             Fill = StoneStates.ConvertStonesColourToBrush()
         };
     }

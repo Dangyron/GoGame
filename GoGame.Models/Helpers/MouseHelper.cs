@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace GoGame.Utility.Helpers;
+namespace GoGame.Models.Helpers;
 
 public static class MouseHelper
 {
@@ -12,8 +12,8 @@ public static class MouseHelper
         {
             var point = new Point
             {
-                X = Constants.Constants.BoardHorizontalMargin + Constants.Constants.CellSize,
-                Y = Constants.Constants.BoardVerticalMargin + Constants.Constants.CellSize
+                X = Utility.Constants.Constants.BoardHorizontalMargin + Utility.Constants.Constants.CellSize,
+                Y = Utility.Constants.Constants.BoardVerticalMargin + Utility.Constants.Constants.CellSize
             };
 
             if (point == AllPossiblePoints[0])
@@ -22,14 +22,14 @@ public static class MouseHelper
             AllPossiblePoints.Clear();
         }
         
-        for (int i = 0; i < Constants.Constants.CountOfCells; i++)
+        for (int i = 0; i < Utility.Constants.Constants.CountOfCells; i++)
         {
-            for (int j = 0; j < Constants.Constants.CountOfCells; j++)
+            for (int j = 0; j < Utility.Constants.Constants.CountOfCells; j++)
             {
                 var point = new Point
                 {
-                    X = Constants.Constants.BoardHorizontalMargin + j * Constants.Constants.CellSize,
-                    Y = Constants.Constants.BoardVerticalMargin + i * Constants.Constants.CellSize
+                    X = Utility.Constants.Constants.BoardHorizontalMargin + j * Utility.Constants.Constants.CellSize,
+                    Y = Utility.Constants.Constants.BoardVerticalMargin + i * Utility.Constants.Constants.CellSize
                 };
 
                 AllPossiblePoints.Add(point);
@@ -51,12 +51,12 @@ public static class MouseHelper
                 (pt.Y - point.Y) *
                 (pt.Y - point.Y));
 
-            if (currMinLength <= Constants.Constants.StoneSize / 2.0)
+            if (currMinLength <= Utility.Constants.Constants.StoneSize / 2.0)
             {
                 return pt;
             }
         }
 
-        return Constants.Constants.UndefinedPoint;
+        return Utility.Constants.Constants.UndefinedPoint;
     }
 }

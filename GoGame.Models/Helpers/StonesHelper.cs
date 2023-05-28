@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using GoGame.Utility;
+using GoGame.Utility.Constants;
 
-namespace GoGame.Utility.Helpers;
+namespace GoGame.Models.Helpers;
 
 public static class StonesHelper
 {
@@ -20,9 +22,9 @@ public static class StonesHelper
     {
         return stonesState switch
         {
-            StonesStates.White => Constants.Constants.WhiteStone,
-            StonesStates.Black => Constants.Constants.BlackStone,
-            StonesStates.Empty => Constants.Constants.EmptyStone,
+            StonesStates.White => Utility.Constants.Constants.WhiteStone,
+            StonesStates.Black => Utility.Constants.Constants.BlackStone,
+            StonesStates.Empty => Utility.Constants.Constants.EmptyStone,
             _ => throw new ArgumentOutOfRangeException(nameof(stonesState), stonesState, null)
         };
     }
@@ -31,23 +33,23 @@ public static class StonesHelper
         if (isOnFreePoint)
             return stonesState switch
             {
-                StonesStates.White => Constants.Constants.MouseWhiteStone,
-                StonesStates.Black => Constants.Constants.MouseBlackStone,
+                StonesStates.White => Utility.Constants.Constants.MouseWhiteStone,
+                StonesStates.Black => Utility.Constants.Constants.MouseBlackStone,
                 _ => throw new InvalidEnumArgumentException(nameof(stonesState))
             };
         
-        return Constants.Constants.EmptyStone;
+        return Utility.Constants.Constants.EmptyStone;
     }
     
     public static StoneIndexer ConvertPositionToIndexers(this Point point)
     {
         var position = point.GetNearestPositionOnBoard();
         
-        if (position == Constants.Constants.UndefinedPoint)
-            return Constants.Constants.UndefinedIndexer;
+        if (position == Utility.Constants.Constants.UndefinedPoint)
+            return Constants.UndefinedIndexer;
 
-        int i = (int)(position.Y - Constants.Constants.BoardVerticalMargin) / Constants.Constants.StoneSize;
-        int j = (int)(position.X - Constants.Constants.BoardHorizontalMargin) / Constants.Constants.StoneSize;
+        int i = (int)(position.Y - Utility.Constants.Constants.BoardVerticalMargin) / Utility.Constants.Constants.StoneSize;
+        int j = (int)(position.X - Utility.Constants.Constants.BoardHorizontalMargin) / Utility.Constants.Constants.StoneSize;
 
         return new StoneIndexer { I = i, J = j };
     }

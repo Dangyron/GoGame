@@ -3,9 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
-using GoGame.Utility.Helpers;
+using GoGame.Models.Helpers;
+using GoGame.Utility;
 
-namespace GoGame.Utility.Models;
+namespace GoGame.Models.Models;
 
 public class Player : IPlayer
 {
@@ -28,8 +29,8 @@ public class Player : IPlayer
         _stone = new Stone(StoneColour);
         Mouse = new Ellipse
         {
-            Width = Constants.Constants.StoneSize,
-            Height = Constants.Constants.StoneSize,
+            Width = Utility.Constants.Constants.StoneSize,
+            Height = Utility.Constants.Constants.StoneSize,
             Fill = StoneColour.ConvertStonesColourToMouseBrush()
         };
         DeactivateMouse();
@@ -59,7 +60,7 @@ public class Player : IPlayer
         var position = e.GetPosition(_board.BoardCanvas);
         var nearest = position.GetNearestPositionOnBoard();
         
-        if (!position.IsMouseOnBoard() || nearest == Constants.Constants.UndefinedPoint)
+        if (!position.IsMouseOnBoard() || nearest == Utility.Constants.Constants.UndefinedPoint)
         {
             DeactivateMouse();
             return;
@@ -67,8 +68,8 @@ public class Player : IPlayer
         
         UpdateEllipseColour(nearest);
 
-        Canvas.SetLeft(Mouse, nearest.X - Constants.Constants.StoneSize / 2.0);
-        Canvas.SetTop(Mouse, nearest.Y - Constants.Constants.StoneSize / 2.0);
+        Canvas.SetLeft(Mouse, nearest.X - Utility.Constants.Constants.StoneSize / 2.0);
+        Canvas.SetTop(Mouse, nearest.Y - Utility.Constants.Constants.StoneSize / 2.0);
     }
 
     private void LeftButtonClickHandler(object sender, MouseButtonEventArgs e)
@@ -107,6 +108,6 @@ public class Player : IPlayer
 
     private void DeactivateMouse()
     {
-        Mouse.Fill = Constants.Constants.EmptyStone;
+        Mouse.Fill = Utility.Constants.Constants.EmptyStone;
     }
 }

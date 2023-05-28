@@ -1,6 +1,7 @@
-﻿using GoGame.Utility.Models;
+﻿using GoGame.Models.Models;
+using GoGame.Utility;
 
-namespace GoGame.Utility.Helpers;
+namespace GoGame.Models.Helpers;
 
 public static class StonesGroupsHelper
 {

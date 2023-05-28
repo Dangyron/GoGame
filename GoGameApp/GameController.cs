@@ -1,5 +1,7 @@
-﻿using GoGame.Utility;
-using GoGame.Utility.Models;
+﻿using GoGame.Models;
+using GoGame.Models.Helpers;
+using GoGame.Models.Models;
+using GoGame.Utility;
 
 namespace GoGameApp;
 

@@ -1,4 +1,6 @@
-﻿namespace GoGame.Utility.Helpers;
+﻿using GoGame.Utility;
+
+namespace GoGame.Models.Helpers;
 
 public static class StoneIndexerHelper
 {
@@ -13,7 +15,7 @@ public static class StoneIndexerHelper
     
     public static bool IsValidIndex(this StoneIndexer indexer)
     {
-        return indexer.I is >= 0 and < Constants.Constants.CountOfCells &&
-               indexer.J is >= 0 and < Constants.Constants.CountOfCells;
+        return indexer.I is >= 0 and < Utility.Constants.Constants.CountOfCells &&
+               indexer.J is >= 0 and < Utility.Constants.Constants.CountOfCells;
     }
 }

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GoGame.Models\GoGame.Models.csproj" />
       <ProjectReference Include="..\GoGame.Utility\GoGame.Utility.csproj" />
     </ItemGroup>
 

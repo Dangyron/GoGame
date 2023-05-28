@@ -1,4 +1,6 @@
-﻿namespace GoGame.Utility.Models;
+﻿using GoGame.Utility;
+
+namespace GoGame.Models.Models;
 
 public class StonesList
 {
@@ -6,7 +8,7 @@ public class StonesList
 
     public StonesList()
     {
-        _stones = new List<List<Stone>>(Constants.Constants.CountOfCells);
+        _stones = new List<List<Stone>>(Utility.Constants.Constants.CountOfCells);
         InitStones();
     }
 
@@ -28,11 +30,11 @@ public class StonesList
     
     private void InitStones()
     {
-        for (var i = 0; i < Constants.Constants.CountOfCells; i++)
+        for (var i = 0; i < Utility.Constants.Constants.CountOfCells; i++)
         {
-            _stones.Add(new List<Stone>(Constants.Constants.CountOfCells));
+            _stones.Add(new List<Stone>(Utility.Constants.Constants.CountOfCells));
             
-            for (var j = 0; j < Constants.Constants.CountOfCells; j++)
+            for (var j = 0; j < Utility.Constants.Constants.CountOfCells; j++)
             {
                 _stones[i].Add(new Stone(StonesStates.Empty));
             }
