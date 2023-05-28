@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
@@ -38,12 +39,17 @@ public class Player : IPlayer
     {
         _moveCompletionSource = new TaskCompletionSource<bool>();
 
+        StartMove();
+
+        await _moveCompletionSource.Task;
+    }
+
+    private void StartMove()
+    {
         _board.StoneCaptured += AddCapturedStones;
         _board.BoardCanvas.MouseMove += MouseMoveHandler;
         _board.BoardCanvas.MouseLeftButtonDown += LeftButtonClickHandler;
         _board.BoardCanvas.MouseRightButtonDown += RightButtonClickHandler;
-
-        await _moveCompletionSource.Task;
     }
 
     private void AddCapturedStones(int count) => CapturedStones += count;
@@ -71,23 +77,25 @@ public class Player : IPlayer
         if (!mousePosition.IsMouseOnBoard()) return;
 
         if (!_board.AddStone(_stone, mousePosition)) return;
-
+        Debug.WriteLine($"Current stones count: {CapturedStones}");
         _stone = new Stone(StoneColour);
 
-        _board.BoardCanvas.MouseLeftButtonDown -= LeftButtonClickHandler;
-        _board.BoardCanvas.MouseRightButtonDown -= RightButtonClickHandler;
-        _board.BoardCanvas.MouseMove -= MouseMoveHandler;
-        _board.StoneCaptured -= AddCapturedStones;
+        EndMove();
         _moveCompletionSource!.SetResult(true);
         DeactivateMouse();
     }
 
-    private void RightButtonClickHandler(object sender, MouseButtonEventArgs e)
+    private void EndMove()
     {
         _board.BoardCanvas.MouseLeftButtonDown -= LeftButtonClickHandler;
         _board.BoardCanvas.MouseRightButtonDown -= RightButtonClickHandler;
         _board.BoardCanvas.MouseMove -= MouseMoveHandler;
         _board.StoneCaptured -= AddCapturedStones;
+    }
+
+    private void RightButtonClickHandler(object sender, MouseButtonEventArgs e)
+    {
+        EndMove();
         _moveCompletionSource!.SetResult(true);
         DeactivateMouse();
     }

@@ -38,7 +38,7 @@ public static class StonesGroupsHelper
         return group.HasDome(stones, position, new HashSet<StoneIndexer>());
     }
     
-    public static bool HasDome(this StonesGroup group, StonesList stones, StoneIndexer position,HashSet<StoneIndexer> visitedPositions)
+    private static bool HasDome(this StonesGroup group, StonesList stones, StoneIndexer position, HashSet<StoneIndexer> visitedPositions)
     {
         if (!position.IsValidIndex())
             return false;

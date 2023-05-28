@@ -33,21 +33,49 @@ public static class StonesListHelper
                 }
             }
         }
-
         if (!added)
         {
-            groups.Add(new StonesGroup(stones[position].StoneStates));
-            groups.Last().Add(position);
-            return true;
-        }
+            dummyGroups.Add(new StonesGroup(stones[position].StoneStates));
+            dummyGroups.Last().Add(position);
 
+            if (dummyGroups.Last().HasDome(stones, position))
+            {
+                groups.Add(dummyGroups.Last());
+                return true;
+            }
+            dummyGroups.Clear();
+            bool hasDome = true;
+            
+            foreach (var group in groups)
+            {
+                var adjacentPositions = position.GetAdjacentPositions();
+                foreach (var adjacentPosition in adjacentPositions)
+                {
+                    if (stones[position].StoneStates.GetOppositeStoneState() == group.Colour && group.Contains(adjacentPosition))
+                    {
+                        if (!group.HasDome(stones, adjacentPosition))
+                        {
+                            hasDome = false;
+                        }
+                    }
+                }
+            }
+
+            if (!hasDome) 
+                return true;
+            
+            stones.Remove(position);
+            Notification.SelfCaptured();
+            return false;
+        }
+        
         var merged = dummyGroups.MergeGroups(position);
 
         if (merged.HasDome(stones, position))
         {
-            groups[0] = merged;
+            groups[indexesOfGroups.First()] = merged;
             for (int i = 1; i < indexesOfGroups.Count; i++)
-                groups[i].Clear();
+                groups[indexesOfGroups[i]].Clear();
 
             return true;
         }

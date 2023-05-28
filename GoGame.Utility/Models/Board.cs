@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Shapes;
 using GoGame.Utility.Helpers;
+using MessageBox = System.Windows.MessageBox;
 
 namespace GoGame.Utility.Models;
 
@@ -69,6 +71,7 @@ public class Board
             
             foreach (var group in _groups.CaptureStones(_stones, stone.StoneStates, position))
             {
+                StoneCaptured?.Invoke(group.Count);
                 _stones.RemoveGroup(group);
             }
 
