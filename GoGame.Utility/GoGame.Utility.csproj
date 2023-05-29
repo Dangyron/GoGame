@@ -14,8 +14,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Raw\Images" />
         <Folder Include="Constants" />
+        <Folder Include="Images" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Images\black-stone.png" />
+      <Resource Include="Images\white-stone.png" />
     </ItemGroup>
 
 </Project>

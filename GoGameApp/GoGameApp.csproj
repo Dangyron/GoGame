@@ -19,4 +19,10 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="StartUpWindow.xaml~">
+        <DependentUpon>StartUpWindow.xaml</DependentUpon>
+      </None>
+    </ItemGroup>
+
 </Project>
