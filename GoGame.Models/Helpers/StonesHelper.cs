@@ -22,9 +22,9 @@ public static class StonesHelper
     {
         return stonesState switch
         {
-            StonesStates.White => Utility.Constants.Constants.WhiteStone,
-            StonesStates.Black => Utility.Constants.Constants.BlackStone,
-            StonesStates.Empty => Utility.Constants.Constants.EmptyStone,
+            StonesStates.White => Constants.WhiteStone,
+            StonesStates.Black => Constants.BlackStone,
+            StonesStates.Empty => Constants.EmptyStone,
             _ => throw new ArgumentOutOfRangeException(nameof(stonesState), stonesState, null)
         };
     }
@@ -33,23 +33,23 @@ public static class StonesHelper
         if (isOnFreePoint)
             return stonesState switch
             {
-                StonesStates.White => Utility.Constants.Constants.MouseWhiteStone,
-                StonesStates.Black => Utility.Constants.Constants.MouseBlackStone,
+                StonesStates.White => Constants.MouseWhiteStone,
+                StonesStates.Black => Constants.MouseBlackStone,
                 _ => throw new InvalidEnumArgumentException(nameof(stonesState))
             };
         
-        return Utility.Constants.Constants.EmptyStone;
+        return Constants.EmptyStone;
     }
     
     public static StoneIndexer ConvertPositionToIndexers(this Point point)
     {
         var position = point.GetNearestPositionOnBoard();
         
-        if (position == Utility.Constants.Constants.UndefinedPoint)
+        if (position == Constants.UndefinedPoint)
             return Constants.UndefinedIndexer;
 
-        int i = (int)(position.Y - Utility.Constants.Constants.BoardVerticalMargin) / Utility.Constants.Constants.StoneSize;
-        int j = (int)(position.X - Utility.Constants.Constants.BoardHorizontalMargin) / Utility.Constants.Constants.StoneSize;
+        int i = (int)(position.Y - Constants.BoardVerticalMargin) / Constants.StoneSize;
+        int j = (int)(position.X - Constants.BoardHorizontalMargin) / Constants.StoneSize;
 
         return new StoneIndexer { I = i, J = j };
     }

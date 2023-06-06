@@ -1,4 +1,5 @@
 ﻿using GoGame.Utility;
+using GoGame.Utility.Constants;
 
 namespace GoGame.Models.Models;
 
@@ -8,7 +9,7 @@ public class StonesList
 
     public StonesList()
     {
-        _stones = new List<List<Stone>>(Utility.Constants.Constants.CountOfCells);
+        _stones = new List<List<Stone>>(Constants.CountOfCells);
         InitStones();
     }
 
@@ -23,6 +24,11 @@ public class StonesList
         _stones[index.I][index.J] = stone;
     }
     
+    public void Place(int i, int j, Stone stone)
+    {
+        _stones[i][j] = stone;
+    }
+    
     public void Remove(StoneIndexer position)
     {
         _stones[position.I][position.J] = new Stone(StonesStates.Empty);
@@ -30,11 +36,11 @@ public class StonesList
     
     private void InitStones()
     {
-        for (var i = 0; i < Utility.Constants.Constants.CountOfCells; i++)
+        for (var i = 0; i < Constants.CountOfCells; i++)
         {
-            _stones.Add(new List<Stone>(Utility.Constants.Constants.CountOfCells));
+            _stones.Add(new List<Stone>(Constants.CountOfCells));
             
-            for (var j = 0; j < Utility.Constants.Constants.CountOfCells; j++)
+            for (var j = 0; j < Constants.CountOfCells; j++)
             {
                 _stones[i].Add(new Stone(StonesStates.Empty));
             }

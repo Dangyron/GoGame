@@ -10,9 +10,4 @@
     <ItemGroup>
       <ProjectReference Include="..\GoGame.Utility\GoGame.Utility.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Helpers" />
-        <Folder Include="Models" />
-    </ItemGroup>
 </Project>

@@ -21,6 +21,8 @@
     <ItemGroup>
       <Resource Include="Images\black-stone.png" />
       <Resource Include="Images\white-stone.png" />
+      <None Remove="Images\arrow.png" />
+      <Resource Include="Images\arrow.png" />
     </ItemGroup>
 
 </Project>

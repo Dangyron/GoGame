@@ -1,9 +1,10 @@
 ﻿using System.Windows;
-using GoGame.Utility.Constants;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using GoGame.Models.Helpers;
+using GoGame.Models.ReadWriters;
 using GoGame.Utility;
+using GoGame.Utility.Constants;
 
 namespace GoGame.Models.Models;
 
@@ -13,14 +14,17 @@ public class Board
     private readonly StonesList _stones;
     private readonly List<StonesGroup> _groups;
     public event Action<int>? StoneCaptured;
-    
+    public Label Label { get; } = new();
     public Canvas BoardCanvas { get; }
     public Board(Canvas boardCanvas)
     {
         BoardCanvas = boardCanvas;
-        _stones = new ();
+        _stones = new BoardReadWriter().ReadFromFile();
         _prevStones = new ();
         _groups = new List<StonesGroup>();
+        
+        Canvas.SetTop(Label, 10);
+        Canvas.SetRight(Label, 10);
     }
 
     public bool ContainsStoneAtThisPosition(Point position)
@@ -38,18 +42,19 @@ public class Board
         DrawBoardBorders();
         DrawBoardStars();
         DrawStones();
+        BoardCanvas.Children.Add(Label);
     }
     
     private void DrawStones()
     {
-        for (int i = 0; i < Utility.Constants.Constants.CountOfCells; i++)
+        for (int i = 0; i < Constants.CountOfCells; i++)
         {
-            for (int j = 0; j < Utility.Constants.Constants.CountOfCells; j++)
+            for (int j = 0; j < Constants.CountOfCells; j++)
             {
                 var position = new Point
                 {
-                    X = Utility.Constants.Constants.BoardHorizontalMargin + j * Utility.Constants.Constants.CellSize - Utility.Constants.Constants.StoneSize / 2.0,
-                    Y = Utility.Constants.Constants.BoardVerticalMargin + i * Utility.Constants.Constants.CellSize - Utility.Constants.Constants.StoneSize / 2.0
+                    X = Constants.BoardHorizontalMargin + j * Constants.CellSize - Constants.StoneSize / 2.0,
+                    Y = Constants.BoardVerticalMargin + i * Constants.CellSize - Constants.StoneSize / 2.0
                 };
                 _stones[i][j].Imagination.UpdateStoneSize();
 
@@ -77,6 +82,7 @@ public class Board
 
             _groups.RemoveAll(i => i.Count == 0);
             
+            new BoardReadWriter().WriteToFile(_stones);
             return true;
         }
 
@@ -85,27 +91,27 @@ public class Board
 
     private void DrawBoardBorders()
     {
-        for (var i = 0; i < Utility.Constants.Constants.CountOfCells; i++)
+        for (var i = 0; i < Constants.CountOfCells; i++)
         {
             var verticalLine = new Line
             {
-                X1 = i * Utility.Constants.Constants.CellSize + Utility.Constants.Constants.BoardHorizontalMargin,
-                Y1 = Utility.Constants.Constants.BoardVerticalMargin,
-                X2 = i * Utility.Constants.Constants.CellSize + Utility.Constants.Constants.BoardHorizontalMargin,
-                Y2 = Utility.Constants.Constants.GridLineLength + Utility.Constants.Constants.BoardVerticalMargin,
-                Stroke = Utility.Constants.Constants.BoardStrokeColour,
-                StrokeThickness = Utility.Constants.Constants.BoardStrokeThickness
+                X1 = i * Constants.CellSize + Constants.BoardHorizontalMargin,
+                Y1 = Constants.BoardVerticalMargin,
+                X2 = i * Constants.CellSize + Constants.BoardHorizontalMargin,
+                Y2 = Constants.GridLineLength + Constants.BoardVerticalMargin,
+                Stroke = Constants.BoardStrokeColour,
+                StrokeThickness = Constants.BoardStrokeThickness
             };
             BoardCanvas.Children.Add(verticalLine);
 
             var horizontalLine = new Line
             {
-                X1 = Utility.Constants.Constants.BoardHorizontalMargin,
-                Y1 = i * Utility.Constants.Constants.CellSize + Utility.Constants.Constants.BoardVerticalMargin,
-                X2 = Utility.Constants.Constants.GridLineLength + Utility.Constants.Constants.BoardHorizontalMargin,
-                Y2 = i * Utility.Constants.Constants.CellSize + Utility.Constants.Constants.BoardVerticalMargin,
-                Stroke = Utility.Constants.Constants.BoardStrokeColour,
-                StrokeThickness = Utility.Constants.Constants.BoardStrokeThickness
+                X1 = Constants.BoardHorizontalMargin,
+                Y1 = i * Constants.CellSize + Constants.BoardVerticalMargin,
+                X2 = Constants.GridLineLength + Constants.BoardHorizontalMargin,
+                Y2 = i * Constants.CellSize + Constants.BoardVerticalMargin,
+                Stroke = Constants.BoardStrokeColour,
+                StrokeThickness = Constants.BoardStrokeThickness
             };
             BoardCanvas.Children.Add(horizontalLine);
         }
@@ -115,9 +121,9 @@ public class Board
     {
         var starPoint = new Ellipse
         {
-            Width = Utility.Constants.Constants.BoardStarSize,
-            Height = Utility.Constants.Constants.BoardStarSize,
-            Fill = Utility.Constants.Constants.BoardStrokeColour
+            Width = Constants.BoardStarSize,
+            Height = Constants.BoardStarSize,
+            Fill = Constants.BoardStrokeColour
         };
 
         for (var i = 0; i < 3; i++)
@@ -125,17 +131,17 @@ public class Board
             for (var j = 0; j < 3; j++)
             {
                 Canvas.SetLeft(starPoint,
-                    3 * Utility.Constants.Constants.CellSize * (1 + j * 2) + Utility.Constants.Constants.BoardHorizontalMargin -
-                    Utility.Constants.Constants.BoardStarSize / 2.0);
+                    3 * Constants.CellSize * (1 + j * 2) + Constants.BoardHorizontalMargin -
+                    Constants.BoardStarSize / 2.0);
                 Canvas.SetTop(starPoint,
-                    3 * Utility.Constants.Constants.CellSize * (1 + i * 2) + Utility.Constants.Constants.BoardVerticalMargin -
-                    Utility.Constants.Constants.BoardStarSize / 2.0);
+                    3 * Constants.CellSize * (1 + i * 2) + Constants.BoardVerticalMargin -
+                    Constants.BoardStarSize / 2.0);
                 BoardCanvas.Children.Add(starPoint);
                 starPoint = new Ellipse
                 {
-                    Width = Utility.Constants.Constants.BoardStarSize,
-                    Height = Utility.Constants.Constants.BoardStarSize,
-                    Fill = Utility.Constants.Constants.BoardStrokeColour
+                    Width = Constants.BoardStarSize,
+                    Height = Constants.BoardStarSize,
+                    Fill = Constants.BoardStrokeColour
                 };
             }
         }
