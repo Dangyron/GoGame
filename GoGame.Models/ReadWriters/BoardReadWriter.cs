@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using GoGame.Models.Helpers;
 using GoGame.Models.Models;
 using GoGame.Utility;
@@ -57,9 +58,18 @@ public class BoardReadWriter : IReadWriter<StonesList>
 
     public void Clear()
     {
-        using var reader = new StreamReader("Board.txt");
-        string board = reader.ReadToEnd().Replace("-1", "0").Replace("1", "0");
-        reader.Dispose();
-        File.WriteAllText("Board.txt", board);
+        List<StringBuilder> board = new List<StringBuilder>(Constants.CountOfCells);
+
+        for (int i = 0; i < Constants.CountOfCells; i++)
+        {
+            board.Add(new StringBuilder(Constants.CountOfCells));
+            for (int j = 0; j < Constants.CountOfCells; j++)
+            {
+                board[i].Append("0;");
+            }
+            board[i].Append('\n');
+        }
+        
+        File.WriteAllText("Board.txt", string.Concat(board));
     }
 }

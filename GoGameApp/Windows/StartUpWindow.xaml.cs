@@ -8,18 +8,17 @@ namespace GoGameApp.Windows;
 
 public partial class StartUpWindow
 {
-    private GameBoard? _gameBoard;
-    private SettingsPage? _settingsPage;
-    private static bool _isFirstLoad = true;
+    private GameBoardWindow? _gameBoard;
+    public static bool _isFirstLoad = true;
+    private PlayerDataEventArgs _playerDataEventArgs;
+    
     public StartUpWindow()
     {
         if (_isFirstLoad)
         {
-            new BoardReadWriter().Clear();
-            new PlayerReadWriter().Clear();
-            new CapturedStonesReadWriter().Clear();
-            _isFirstLoad = false;
+            ReadWriteHelper.ClearAllData();
         }
+
         InitializeComponent();
         Background = Constants.BoardBackGroundColour;
         var startUpPage = new StartUpPage();
@@ -30,24 +29,34 @@ public partial class StartUpWindow
     public void BindAllButtons(StartUpPage startUpPage)
     {
         startUpPage.Button1.Click += ButtonBase1_OnClick;
-        startUpPage.Button2.Click += ButtonBase2_OnClick;
         startUpPage.Button3.Click += ButtonBase3_OnClick;
     }
-    
+
     private void ButtonBase3_OnClick(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
     }
 
-    private void ButtonBase2_OnClick(object sender, RoutedEventArgs e)
-    {
-        _settingsPage = new SettingsPage();
-        Content = _settingsPage;
-    }
-
     private void ButtonBase1_OnClick(object sender, RoutedEventArgs e)
     {
-        _gameBoard = new GameBoard();
+        if (_isFirstLoad)
+        {
+            var prompt = new StartGame();
+            prompt.PlayerDataSubmitted += MainWindow_PlayerDataSubmitted;
+            prompt.ShowDialog();
+            _isFirstLoad = false;
+        }
+        else
+        {
+            _gameBoard = new GameBoardWindow(_playerDataEventArgs);
+            Content = _gameBoard;
+        }
+    }
+
+    private void MainWindow_PlayerDataSubmitted(object? sender, PlayerDataEventArgs e)
+    {
+        _playerDataEventArgs = e;
+        _gameBoard = new GameBoardWindow(_playerDataEventArgs);
         Content = _gameBoard;
     }
 
@@ -57,8 +66,7 @@ public partial class StartUpWindow
             return;
 
         var size = new Size(ActualWidth, ActualHeight);
-        
+
         _gameBoard.ChangeBoardSize(size);
     }
-    
 }

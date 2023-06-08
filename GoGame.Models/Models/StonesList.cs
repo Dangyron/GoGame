@@ -3,7 +3,7 @@ using GoGame.Utility.Constants;
 
 namespace GoGame.Models.Models;
 
-public class StonesList
+public class StonesList : ICloneable
 {
     private readonly List<List<Stone>> _stones;
 
@@ -74,5 +74,19 @@ public class StonesList
     public override int GetHashCode()
     {
         return _stones.GetHashCode();
+    }
+
+    public object Clone()
+    {
+        var clone = new StonesList();
+        for (int i = 0; i < Constants.CountOfCells; i++)
+        {
+            for (int j = 0; j < Constants.CountOfCells; j++)
+            {
+                clone[i][j] = _stones[i][j];
+            }
+        }
+
+        return clone;
     }
 }

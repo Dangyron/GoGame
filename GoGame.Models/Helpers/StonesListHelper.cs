@@ -1,5 +1,6 @@
 ﻿using GoGame.Models.Models;
 using GoGame.Utility;
+using GoGame.Utility.Constants;
 
 namespace GoGame.Models.Helpers;
 
@@ -84,5 +85,57 @@ public static class StonesListHelper
         Notification.SelfCaptured();
 
         return false;
+    }
+
+    public static Dictionary<StonesStates, int> ComputingScore(this StonesList board, List<StonesGroup> groups)
+    {
+        var score = new Dictionary<StonesStates, int>()
+        {
+            { StonesStates.Black, 0 },
+            { StonesStates.White, 0 }
+        };
+
+        var visited = new HashSet<StoneIndexer>();
+
+        for (int i = 0; i < Constants.CountOfCells; i++)
+        {
+            for (int j = 0; j < Constants.CountOfCells; j++)
+            {
+                var position = new StoneIndexer(i, j);
+
+                if (visited.Contains(position) || board[position].StoneStates == StonesStates.Empty) 
+                    continue;
+                visited.Add(position);
+                var group = groups.Find(x => x.Contains(position));
+                if (group is null)
+                {
+                    return new Dictionary<StonesStates, int>();
+                }
+                    
+                HashSet<StonesStates> surroundingColors = new HashSet<StonesStates>();
+
+                foreach (var stone in group)
+                {
+                    foreach (var adjacent in stone.GetAdjacentPositions())
+                    {
+                        if (adjacent.IsValidIndex())
+                        {
+                            var colour = board[adjacent].StoneStates;
+                            if (colour != StonesStates.Empty)
+                            {
+                                surroundingColors.Add(colour);
+                            }
+                        }
+                    }
+                }
+                if (surroundingColors.Count == 1)
+                {
+                    StonesStates groupColor = surroundingColors.Single();
+                    score[groupColor] += group.Count;
+                }
+            }
+        }
+
+        return score;
     }
 }

@@ -1,4 +1,4 @@
-﻿<Page x:Class="GoGameApp.Pages.GameBoard"
+﻿<Page x:Class="GoGameApp.Pages.GameBoardWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         SizeChanged="ChangeWindowSize"

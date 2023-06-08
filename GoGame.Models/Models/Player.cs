@@ -17,19 +17,22 @@ public class Player : IPlayer
     public StonesStates StoneColour { get; }
     public string Name { get; }
 
-    public bool Resign { get; private set; } = false;
+    public bool Resign { get; private set; }
+    public int SkippedCount { get; private set; }
     public int CapturedStones { get; private set; }
     public bool HasMouse => true;
     private Stone _stone;
     public Ellipse Mouse { get; }
 
-    public Player(StonesStates stoneColour, string name, Board board, int capturedStones)
+    private readonly CancellationTokenSource _cancellationToken;
+    public Player(StonesStates stoneColour, string name, Board board, int capturedStones, CancellationTokenSource cancellationToken)
     {
         StoneColour = stoneColour;
         Name = name;
         _board = board;
         _stone = new Stone(StoneColour);
         CapturedStones = capturedStones;
+        _cancellationToken = cancellationToken;
         Mouse = new Ellipse
         {
             Width = Constants.StoneSize,
@@ -44,8 +47,15 @@ public class Player : IPlayer
         _moveCompletionSource = new TaskCompletionSource<bool>();
 
         StartMove();
-
+        
         await _moveCompletionSource.Task;
+    }
+
+    public void OnResign(object sender, RoutedEventArgs e)
+    {
+        Resign = true;
+        _cancellationToken.Cancel();
+        _moveCompletionSource?.TrySetCanceled();
     }
 
     private void StartMove()
@@ -95,6 +105,7 @@ public class Player : IPlayer
         EndMove();
         _moveCompletionSource!.SetResult(true);
         DeactivateMouse();
+        SkippedCount = 0;
     }
 
     private void EndMove()
@@ -108,6 +119,7 @@ public class Player : IPlayer
     private void RightButtonClickHandler(object sender, MouseButtonEventArgs e)
     {
         EndMove();
+        SkippedCount++;
         _moveCompletionSource!.SetResult(true);
         DeactivateMouse();
     }

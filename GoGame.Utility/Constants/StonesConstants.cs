@@ -5,6 +5,7 @@ namespace GoGame.Utility.Constants;
 
 public static partial class Constants
 {
+    public const double Komi = 6.5;
     public static Brush WhiteStone { get; } = Brushes.White;
     public static Brush BlackStone { get; } = Brushes.Black;
     public static Brush EmptyStone { get; } = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));

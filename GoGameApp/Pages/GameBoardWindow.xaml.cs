@@ -1,13 +1,17 @@
-﻿namespace GoGameApp.Pages;
+﻿using GoGame.Models.Models;
+using GoGameApp.Windows;
 
-public partial class GameBoard
+namespace GoGameApp.Pages;
+
+public partial class GameBoardWindow
 {
     private readonly GameController _gameController;
-    public GameBoard()
+    public GameBoardWindow(PlayerDataEventArgs startGame)
     {
         InitializeComponent();
         BoardCanvas.Background = Constants.BoardBackGroundColour;
-        _gameController = new GameController(BoardCanvas, this);
+        
+        _gameController = new GameController(BoardCanvas, this, startGame);
         MouseMove += _gameController.MouseMove;
     }
 

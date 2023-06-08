@@ -10,19 +10,19 @@ namespace GoGame.Models.Models;
 
 public class Board
 {
-    private readonly StonesList _prevStones;
     private readonly StonesList _stones;
     private readonly List<StonesGroup> _groups;
     public event Action<int>? StoneCaptured;
     public Label Label { get; } = new();
     public Canvas BoardCanvas { get; }
+
+    public Dictionary<StonesStates, int> Score => _stones.ComputingScore(_groups);
     public Board(Canvas boardCanvas)
     {
         BoardCanvas = boardCanvas;
         _stones = new BoardReadWriter().ReadFromFile();
-        _prevStones = new ();
         _groups = new List<StonesGroup>();
-        
+
         Canvas.SetTop(Label, 10);
         Canvas.SetRight(Label, 10);
     }
@@ -33,7 +33,7 @@ public class Board
 
         if (indexer.Equals(Constants.UndefinedIndexer))
             return false;
-        
+
         return _stones[indexer].StoneStates != StonesStates.Empty;
     }
 
@@ -44,7 +44,7 @@ public class Board
         DrawStones();
         BoardCanvas.Children.Add(Label);
     }
-    
+
     private void DrawStones()
     {
         for (int i = 0; i < Constants.CountOfCells; i++)
@@ -68,12 +68,12 @@ public class Board
     public bool AddStone(Stone stone, Point point)
     {
         var position = point.ConvertPositionToIndexers();
-        
+
         if (_stones.CheckPlacingRules(stone, position))
         {
             if (!_stones.TryAddToGroup(_groups, position))
                 return false;
-            
+
             foreach (var group in _groups.CaptureStones(_stones, stone.StoneStates, position))
             {
                 StoneCaptured?.Invoke(group.Count);
@@ -81,7 +81,7 @@ public class Board
             }
 
             _groups.RemoveAll(i => i.Count == 0);
-            
+
             new BoardReadWriter().WriteToFile(_stones);
             return true;
         }
@@ -119,31 +119,93 @@ public class Board
 
     private void DrawBoardStars()
     {
-        var starPoint = new Ellipse
-        {
-            Width = Constants.BoardStarSize,
-            Height = Constants.BoardStarSize,
-            Fill = Constants.BoardStrokeColour
-        };
+        DrawCornerStars();
+        DrawInternalStars();
+        DrawCenterStar();
+    }
 
-        for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                Canvas.SetLeft(starPoint,
-                    3 * Constants.CellSize * (1 + j * 2) + Constants.BoardHorizontalMargin -
-                    Constants.BoardStarSize / 2.0);
-                Canvas.SetTop(starPoint,
-                    3 * Constants.CellSize * (1 + i * 2) + Constants.BoardVerticalMargin -
-                    Constants.BoardStarSize / 2.0);
-                BoardCanvas.Children.Add(starPoint);
-                starPoint = new Ellipse
-                {
-                    Width = Constants.BoardStarSize,
-                    Height = Constants.BoardStarSize,
-                    Fill = Constants.BoardStrokeColour
-                };
-            }
-        }
+    private void DrawCenterStar()
+    {
+        var star = BoardHelper.RenewStar();
+        
+        Canvas.SetLeft(star,
+            9 * Constants.CellSize + Constants.BoardHorizontalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        Canvas.SetTop(star,
+            9 * Constants.CellSize + Constants.BoardVerticalMargin -
+            Constants.BoardStarSize / 2.0);
+
+        BoardCanvas.Children.Add(star);
+    }
+
+    private void DrawInternalStars()
+    {
+        var star = BoardHelper.RenewStar();
+        
+        Canvas.SetLeft(star,
+            9 * Constants.CellSize + Constants.BoardHorizontalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        Canvas.SetTop(star,
+            3 * Constants.CellSize + Constants.BoardVerticalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        BoardCanvas.Children.Add(star);
+        
+        star = BoardHelper.RenewStar();
+        
+        Canvas.SetLeft(star,
+            9 * Constants.CellSize + Constants.BoardHorizontalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        Canvas.SetBottom(star,
+            3 * Constants.CellSize + Constants.BoardVerticalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        BoardCanvas.Children.Add(star);
+        
+        star = BoardHelper.RenewStar();
+        
+        Canvas.SetLeft(star,
+            3 * Constants.CellSize + Constants.BoardHorizontalMargin -
+            Constants.BoardStarSize / 2.0);
+         
+        Canvas.SetBottom(star,
+            9 * Constants.CellSize + Constants.BoardVerticalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        BoardCanvas.Children.Add(star);
+        
+        star = BoardHelper.RenewStar();
+        
+        Canvas.SetRight(star,
+            3 * Constants.CellSize + Constants.BoardHorizontalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        Canvas.SetTop(star,
+            9 * Constants.CellSize + Constants.BoardVerticalMargin -
+            Constants.BoardStarSize / 2.0);
+        
+        BoardCanvas.Children.Add(star);
+    }
+
+    private void DrawCornerStars()
+    {
+        DrawStar(BoardHelper.RenewStar(), Canvas.SetTop, Canvas.SetLeft);
+        DrawStar(BoardHelper.RenewStar(), Canvas.SetTop, Canvas.SetRight);
+        DrawStar(BoardHelper.RenewStar(), Canvas.SetBottom, Canvas.SetLeft);
+        DrawStar(BoardHelper.RenewStar(), Canvas.SetBottom, Canvas.SetRight);
+    }
+
+    private void DrawStar(Ellipse starPoint, Action<UIElement, double> vertical, Action<UIElement, double> horizontal)
+    {
+        horizontal(starPoint,
+            3 * Constants.CellSize + Constants.BoardHorizontalMargin -
+            Constants.BoardStarSize / 2.0);
+        vertical(starPoint,
+            3 * Constants.CellSize + Constants.BoardVerticalMargin -
+            Constants.BoardStarSize / 2.0);
+        BoardCanvas.Children.Add(starPoint);
     }
 }
