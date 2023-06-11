@@ -22,7 +22,7 @@ public static class StonesGroupsHelper
         return mergedGroup;
     }
 
-    public static StonesGroup ToStonesGroup(this IEnumerable<StoneIndexer> enumerable, StonesStates colour)
+    private static StonesGroup ToStonesGroup(this IEnumerable<StoneIndexer> enumerable, StonesStates colour)
     {
         var stoneGroup = new StonesGroup(colour);
 

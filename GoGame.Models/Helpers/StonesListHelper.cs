@@ -39,99 +39,94 @@ public static class StonesListHelper
         {
             dummyGroups.Add(new StonesGroup(stones[position].StoneStates));
             dummyGroups.Last().Add(position);
-
-            if (dummyGroups.Last().HasDome(stones, position))
-            {
-                groups.Add(dummyGroups.Last());
-                return true;
-            }
-            dummyGroups.Clear();
-            bool hasDome = true;
-            
-            foreach (var group in groups)
-            {
-                var adjacentPositions = position.GetAdjacentPositions();
-                foreach (var adjacentPosition in adjacentPositions)
-                {
-                    if (stones[position].StoneStates.GetOppositeStoneState() == group.Colour && group.Contains(adjacentPosition))
-                    {
-                        if (!group.HasDome(stones, adjacentPosition))
-                        {
-                            hasDome = false;
-                        }
-                    }
-                }
-            }
-
-            if (!hasDome) 
-                return true;
-            
-            stones.Remove(position);
-            Notification.SelfCaptured();
-            return false;
         }
         
         var merged = dummyGroups.MergeGroups(position);
 
         if (merged.HasDome(stones, position))
         {
+            if (indexesOfGroups.Count == 0)
+            {
+                groups.Add(new StonesGroup(stones[position].StoneStates));
+                groups[^1] = merged;
+                return true;
+            }
             groups[indexesOfGroups.First()] = merged;
+            
             for (int i = 1; i < indexesOfGroups.Count; i++)
                 groups[indexesOfGroups[i]].Clear();
 
             return true;
         }
+        bool hasDome = true;
+            
+        foreach (var group in groups)
+        {
+            var adjacentPositions = position.GetAdjacentPositions();
+            foreach (var adjacentPosition in adjacentPositions)
+            {
+                if (stones[position].StoneStates.GetOppositeStoneState() == group.Colour &&
+                    group.Contains(adjacentPosition))
+                {
+                    if (!group.HasDome(stones, adjacentPosition))
+                    {
+                        hasDome = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!hasDome) 
+            return true;
+            
         stones.Remove(position);
         Notification.SelfCaptured();
-
         return false;
     }
 
-    public static Dictionary<StonesStates, int> ComputingScore(this StonesList board, List<StonesGroup> groups)
+    public static Dictionary<StonesStates, int> ComputingScore(this StonesList board)
     {
-        var score = new Dictionary<StonesStates, int>()
+        return new Dictionary<StonesStates, int>()
         {
-            { StonesStates.Black, 0 },
-            { StonesStates.White, 0 }
+            { StonesStates.Black, board.ComputingScore(StonesStates.Black) },
+            { StonesStates.White, board.ComputingScore(StonesStates.White) },
         };
+    }
 
-        var visited = new HashSet<StoneIndexer>();
+    private static int ComputingScore(this StonesList board, StonesStates colour)
+    {
+        int score = 0;
+        var visited = new List<List<bool>>(Enumerable.Repeat(new List<bool>(Enumerable.Repeat(false, Constants.CountOfCells)), Constants.CountOfCells));
+        var surrounded = new Queue<StoneIndexer>();
 
         for (int i = 0; i < Constants.CountOfCells; i++)
         {
             for (int j = 0; j < Constants.CountOfCells; j++)
             {
-                var position = new StoneIndexer(i, j);
+                var indexer = new StoneIndexer(i, j);
+                if (board[indexer].StoneStates == colour)
+                {
+                    score++;
+                    visited[i][j] = true;
+                    surrounded.Enqueue(indexer);
+                }
+            }
+        }
 
-                if (visited.Contains(position) || board[position].StoneStates == StonesStates.Empty) 
+        while (surrounded.Count > 0)
+        {
+            var adjacents = surrounded.Dequeue().GetAdjacentPositions();
+            foreach (var adjacent in adjacents)
+            {
+                if (!adjacent.IsValidIndex())
                     continue;
-                visited.Add(position);
-                var group = groups.Find(x => x.Contains(position));
-                if (group is null)
+                
+                if (!visited[adjacent.I][adjacent.J] && board[adjacent].StoneStates == StonesStates.Empty)
                 {
-                    return new Dictionary<StonesStates, int>();
-                }
-                    
-                HashSet<StonesStates> surroundingColors = new HashSet<StonesStates>();
-
-                foreach (var stone in group)
-                {
-                    foreach (var adjacent in stone.GetAdjacentPositions())
-                    {
-                        if (adjacent.IsValidIndex())
-                        {
-                            var colour = board[adjacent].StoneStates;
-                            if (colour != StonesStates.Empty)
-                            {
-                                surroundingColors.Add(colour);
-                            }
-                        }
-                    }
-                }
-                if (surroundingColors.Count == 1)
-                {
-                    StonesStates groupColor = surroundingColors.Single();
-                    score[groupColor] += group.Count;
+                    score++;
+                    visited[adjacent.I][adjacent.J] = true;
+                    surrounded.Enqueue(adjacent);
                 }
             }
         }

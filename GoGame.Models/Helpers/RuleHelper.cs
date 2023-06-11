@@ -26,7 +26,7 @@ public static class RuleHelper
     private static bool CheckIfClickedPointFree(this StonesList current, StoneIndexer position)
         => current[position].StoneStates == StonesStates.Empty;
 
-    public static IEnumerable<StonesGroup> CaptureStones(this List<StonesGroup> groups, StonesList stones, StonesStates colour, StoneIndexer position)
+    public static IEnumerable<StonesGroup> CaptureGroups(this List<StonesGroup> groups, StonesList stones, StoneIndexer position)
     {
         foreach (var group in groups)
         {

@@ -19,4 +19,5 @@ public interface IPlayer
     Task Move();
     
     void OnResign(object sender, RoutedEventArgs e);
+    void StopMoving();
 }

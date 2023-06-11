@@ -13,18 +13,14 @@ public class Board
     private readonly StonesList _stones;
     private readonly List<StonesGroup> _groups;
     public event Action<int>? StoneCaptured;
-    public Label Label { get; } = new();
     public Canvas BoardCanvas { get; }
 
-    public Dictionary<StonesStates, int> Score => _stones.ComputingScore(_groups);
+    public Dictionary<StonesStates, int> Score => _stones.ComputingScore();
     public Board(Canvas boardCanvas)
     {
         BoardCanvas = boardCanvas;
         _stones = new BoardReadWriter().ReadFromFile();
         _groups = new List<StonesGroup>();
-
-        Canvas.SetTop(Label, 10);
-        Canvas.SetRight(Label, 10);
     }
 
     public bool ContainsStoneAtThisPosition(Point position)
@@ -42,7 +38,6 @@ public class Board
         DrawBoardBorders();
         DrawBoardStars();
         DrawStones();
-        BoardCanvas.Children.Add(Label);
     }
 
     private void DrawStones()
@@ -74,14 +69,14 @@ public class Board
             if (!_stones.TryAddToGroup(_groups, position))
                 return false;
 
-            foreach (var group in _groups.CaptureStones(_stones, stone.StoneStates, position))
+            foreach (var group in _groups.CaptureGroups(_stones, position))
             {
                 StoneCaptured?.Invoke(group.Count);
                 _stones.RemoveGroup(group);
             }
-
+            
             _groups.RemoveAll(i => i.Count == 0);
-
+            
             new BoardReadWriter().WriteToFile(_stones);
             return true;
         }
@@ -126,7 +121,7 @@ public class Board
 
     private void DrawCenterStar()
     {
-        var star = BoardHelper.RenewStar();
+        var star = BoardHelper.NewStar();
         
         Canvas.SetLeft(star,
             9 * Constants.CellSize + Constants.BoardHorizontalMargin -
@@ -141,7 +136,7 @@ public class Board
 
     private void DrawInternalStars()
     {
-        var star = BoardHelper.RenewStar();
+        var star = BoardHelper.NewStar();
         
         Canvas.SetLeft(star,
             9 * Constants.CellSize + Constants.BoardHorizontalMargin -
@@ -153,7 +148,7 @@ public class Board
         
         BoardCanvas.Children.Add(star);
         
-        star = BoardHelper.RenewStar();
+        star = BoardHelper.NewStar();
         
         Canvas.SetLeft(star,
             9 * Constants.CellSize + Constants.BoardHorizontalMargin -
@@ -165,7 +160,7 @@ public class Board
         
         BoardCanvas.Children.Add(star);
         
-        star = BoardHelper.RenewStar();
+        star = BoardHelper.NewStar();
         
         Canvas.SetLeft(star,
             3 * Constants.CellSize + Constants.BoardHorizontalMargin -
@@ -177,7 +172,7 @@ public class Board
         
         BoardCanvas.Children.Add(star);
         
-        star = BoardHelper.RenewStar();
+        star = BoardHelper.NewStar();
         
         Canvas.SetRight(star,
             3 * Constants.CellSize + Constants.BoardHorizontalMargin -
@@ -192,10 +187,10 @@ public class Board
 
     private void DrawCornerStars()
     {
-        DrawStar(BoardHelper.RenewStar(), Canvas.SetTop, Canvas.SetLeft);
-        DrawStar(BoardHelper.RenewStar(), Canvas.SetTop, Canvas.SetRight);
-        DrawStar(BoardHelper.RenewStar(), Canvas.SetBottom, Canvas.SetLeft);
-        DrawStar(BoardHelper.RenewStar(), Canvas.SetBottom, Canvas.SetRight);
+        DrawStar(BoardHelper.NewStar(), Canvas.SetTop, Canvas.SetLeft);
+        DrawStar(BoardHelper.NewStar(), Canvas.SetTop, Canvas.SetRight);
+        DrawStar(BoardHelper.NewStar(), Canvas.SetBottom, Canvas.SetLeft);
+        DrawStar(BoardHelper.NewStar(), Canvas.SetBottom, Canvas.SetRight);
     }
 
     private void DrawStar(Ellipse starPoint, Action<UIElement, double> vertical, Action<UIElement, double> horizontal)

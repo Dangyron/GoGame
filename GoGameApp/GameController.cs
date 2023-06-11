@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using GoGame.Models.Helpers;
 using GoGame.Models.Models;
@@ -14,11 +13,11 @@ public class GameController
 {
     private readonly Canvas _boardCanvas;
     public readonly GameBoardWindow GameBoard;
+    private static PlayerDataEventArgs? _startGame;
     private readonly Image _returnImage;
     private readonly Board _board;
     private readonly BoardInterface _boardInterface;
     private IPlayer[] _players;
-    private bool _isGameOver = false;
     private readonly CancellationTokenSource _cancellationTokenSource;
 
     public GameController(Canvas boardCanvas, GameBoardWindow gameBoard, PlayerDataEventArgs startGame)
@@ -26,9 +25,10 @@ public class GameController
         _cancellationTokenSource = new CancellationTokenSource();
         _boardCanvas = boardCanvas;
         GameBoard = gameBoard;
+        _startGame = startGame;
         _board = new Board(boardCanvas);
         
-        InitPlayer(startGame);
+        InitPlayers(startGame);
         
         _boardInterface = new BoardInterface(boardCanvas, _players!);
         _returnImage = new Image
@@ -55,12 +55,14 @@ public class GameController
     private void OnResign(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var winner = _players.GetEnemyName(button!.Name == "Black" ? StonesStates.Black : StonesStates.White);
-        _players.Single(i => i.StoneColour == winner).OnResign(null, null);
+        var winner = _players.GetEnemyColour(button!.Name == "Black" ? StonesStates.Black : StonesStates.White);
+        _players.Single(i => i.StoneColour != winner).OnResign(new object(), new RoutedEventArgs());
+        _players.Single(i => i.StoneColour == winner).StopMoving();
+        
         Notification.CongratulationWinner(_players.Single(i => i.StoneColour == winner).Name, winner);
     }
 
-    private void InitPlayer(PlayerDataEventArgs startGame)
+    private void InitPlayers(PlayerDataEventArgs startGame)
     {
         var captured = new CapturedStonesReadWriter().ReadFromFile();
         _players = startGame.ChosenColor switch
@@ -86,72 +88,70 @@ public class GameController
         };
     }
 
-    public async Task StartGame(CancellationToken token)
+    public async Task StartGame()
     {
         if (new PlayerReadWriter().ReadFromFile() == StonesStates.Black)
             Array.Reverse(_players);
-        try
+        
+        
+        while (true)
         {
-            while (!_isGameOver)
+            try
             {
-                if (_players[0].Resign || _players[1].Resign 
-                                       || _players[0].SkippedCount == 3 && _players[1].SkippedCount == 3)
+                if (await PlayerMove(0))
                 {
-                    if (_players[0].SkippedCount == 3 && _players[1].SkippedCount == 3)
-                    {
-                        var winner = _board.Score[StonesStates.White] - _players[0].CapturedStones + Constants.Komi
-                                     > _board.Score[StonesStates.Black] - _players[1].CapturedStones
-                            ? _players[1]
-                            : _players[0];
-                        Notification.CongratulationWinner(winner.Name, winner.StoneColour);
-                    }
-                    _cancellationTokenSource.Cancel();
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    break;
                 }
-                await _players[0].Move();
-                new PlayerReadWriter().WriteToFile(_players[0].StoneColour);
-                UpdateBoard();
 
-                if (_players[0].Resign || _players[1].Resign 
-                    || _players[0].SkippedCount == 3 && _players[1].SkippedCount == 3)
+                if (await PlayerMove(1))
                 {
-                    _cancellationTokenSource.Cancel();
-                    if (_players[0].SkippedCount == 3 && _players[1].SkippedCount == 3)
-                    {
-                        var winner = _board.Score[StonesStates.White] - _players[0].CapturedStones + Constants.Komi
-                                     > _board.Score[StonesStates.Black] - _players[1].CapturedStones
-                            ? _players[1]
-                            : _players[0];
-                        Notification.CongratulationWinner(winner.Name, winner.StoneColour);
-                    }
-
                     _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-                    break;
                 }
-                await _players[1].Move();
-                new PlayerReadWriter().WriteToFile(_players[1].StoneColour);
-                UpdateBoard();
+            }
+            catch (OperationCanceledException)
+            {
+                ReadWriteHelper.ClearAllData();
+                if (Application.Current.MainWindow is not StartUpWindow mainWindow)
+                    return;
+        
+                _cancellationTokenSource.Dispose();
+                StartUpWindow.IsFirstLoad = true;
+                _startGame = null;
+                
+                var page = new StartUpPage(false);
+                mainWindow.Content = page;
+                mainWindow.BindAllButtons(page);
+                mainWindow.Show();
+                return;
             }
         }
-        catch (OperationCanceledException ex)
-        {
-            ReadWriteHelper.ClearAllData();
-            if (Application.Current.MainWindow is not StartUpWindow mainWindow)
-                return;
-        
-            var page = new StartUpPage();
-            mainWindow.Content = page;
-            mainWindow.BindAllButtons(page);
-            mainWindow.Show();
-        }
-        finally
-        {
-            _cancellationTokenSource.Dispose();
-            StartUpWindow._isFirstLoad = true;
-        }
     }
-    
+
+    private async Task<bool> PlayerMove(int playerIndex)
+    {
+        if (_players[0].Resign || _players[1].Resign
+                               || _players[0].SkippedCount == 3 && _players[1].SkippedCount == 3)
+        {
+            if (_players[0].SkippedCount == 3 && _players[1].SkippedCount == 3)
+            {
+                var winner = _board.Score[StonesStates.White] - _players[0].CapturedStones + Constants.Komi
+                             > _board.Score[StonesStates.Black] - _players[1].CapturedStones
+                    ? _players[1]
+                    : _players[0];
+                Notification.ShowScore(_board.Score);
+                Notification.CongratulationWinner(winner.Name, winner.StoneColour);
+            }
+
+            _cancellationTokenSource.Cancel();
+            return true;
+        }
+
+        await _players[playerIndex].Move();
+        new PlayerReadWriter().WriteToFile(_players[playerIndex].StoneColour);
+        UpdateBoard();
+        return false;
+    }
+
     public void UpdateBoard()
     {
         _boardCanvas.Children.Clear();
@@ -171,20 +171,13 @@ public class GameController
         if (_players[1].HasMouse)
             _boardCanvas.Children.Add(_players[1].Mouse);
     }
-
-    public void MouseMove(object sender, MouseEventArgs e)
-    {
-        var position = e.GetPosition(_board.BoardCanvas);
-        _board.Label.Content = $"X: {position.X}, Y: {position.Y}";
-        
-    }
     
     private void ReturnImageOnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (Application.Current.MainWindow is not StartUpWindow mainWindow)
             return;
         
-        var page = new StartUpPage();
+        var page = new StartUpPage(false);
         mainWindow.Content = page;
         mainWindow.BindAllButtons(page);
         mainWindow.Show();

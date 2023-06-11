@@ -1,7 +1,5 @@
-﻿using System.Windows.Media;
-using GoGame.Models.Helpers;
+﻿using GoGame.Models.Helpers;
 using GoGame.Models.Models;
-using GoGame.Models.ReadWriters;
 using GoGameApp.Pages;
 
 namespace GoGameApp.Windows;
@@ -9,19 +7,19 @@ namespace GoGameApp.Windows;
 public partial class StartUpWindow
 {
     private GameBoardWindow? _gameBoard;
-    public static bool _isFirstLoad = true;
-    private PlayerDataEventArgs _playerDataEventArgs;
+    public static bool IsFirstLoad = true;
+    private static PlayerDataEventArgs? _playerDataEventArgs;
     
     public StartUpWindow()
     {
-        if (_isFirstLoad)
+        if (IsFirstLoad)
         {
             ReadWriteHelper.ClearAllData();
         }
 
         InitializeComponent();
         Background = Constants.BoardBackGroundColour;
-        var startUpPage = new StartUpPage();
+        var startUpPage = new StartUpPage(IsFirstLoad);
         Content = startUpPage;
         BindAllButtons(startUpPage);
     }
@@ -39,12 +37,11 @@ public partial class StartUpWindow
 
     private void ButtonBase1_OnClick(object sender, RoutedEventArgs e)
     {
-        if (_isFirstLoad)
+        if (_playerDataEventArgs is null)
         {
             var prompt = new StartGame();
             prompt.PlayerDataSubmitted += MainWindow_PlayerDataSubmitted;
             prompt.ShowDialog();
-            _isFirstLoad = false;
         }
         else
         {

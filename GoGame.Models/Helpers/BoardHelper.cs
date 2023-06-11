@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Shapes;
-using GoGame.Models.Models;
-using GoGame.Utility;
 using GoGame.Utility.Constants;
 
 namespace GoGame.Models.Helpers;
@@ -20,7 +18,7 @@ public static class BoardHelper
                && position.X <= Constants.BoardHorizontalMargin + Constants.GridLineLength + Constants.StoneSize / 2.0;
     }
 
-    public static Ellipse RenewStar()
+    public static Ellipse NewStar()
     {
         return new Ellipse()
         {

@@ -1,5 +1,4 @@
 ﻿using GoGame.Models.Models;
-using GoGameApp.Windows;
 
 namespace GoGameApp.Pages;
 
@@ -12,7 +11,6 @@ public partial class GameBoardWindow
         BoardCanvas.Background = Constants.BoardBackGroundColour;
         
         _gameController = new GameController(BoardCanvas, this, startGame);
-        MouseMove += _gameController.MouseMove;
     }
 
     public void ChangeBoardSize(Size size)
@@ -32,6 +30,6 @@ public partial class GameBoardWindow
 
     private void GameBoard_OnLoaded(object sender, RoutedEventArgs e)
     {
-        _ = _gameController.StartGame(default);
+        _ = _gameController.StartGame();
     }
 }

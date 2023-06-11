@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using GoGame.Models.Helpers;
 using GoGame.Models.ReadWriters;
 using GoGame.Utility;
@@ -23,10 +24,17 @@ public class Player : IPlayer
     public bool HasMouse => true;
     private Stone _stone;
     public Ellipse Mouse { get; }
+    private readonly DispatcherTimer _timer;
 
     private readonly CancellationTokenSource _cancellationToken;
     public Player(StonesStates stoneColour, string name, Board board, int capturedStones, CancellationTokenSource cancellationToken)
     {
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(100)
+        };
+        _timer.Tick += TimerTick;
+        _timer.Start();
         StoneColour = stoneColour;
         Name = name;
         _board = board;
@@ -51,11 +59,28 @@ public class Player : IPlayer
         await _moveCompletionSource.Task;
     }
 
+    private void TimerTick(object? sender, EventArgs e)
+    {
+        if (Resign)
+        {
+            EndMove();
+            _moveCompletionSource?.TrySetCanceled();
+        }
+    }
+
     public void OnResign(object sender, RoutedEventArgs e)
     {
         Resign = true;
         _cancellationToken.Cancel();
-        _moveCompletionSource?.TrySetCanceled();
+    }
+
+    public void StopMoving()
+    {
+        if (!Resign)
+        {
+            EndMove();
+            _moveCompletionSource?.TrySetCanceled();
+        }
     }
 
     private void StartMove()
@@ -99,7 +124,6 @@ public class Player : IPlayer
         if (!mousePosition.IsMouseOnBoard()) return;
 
         if (!_board.AddStone(_stone, mousePosition)) return;
-        Debug.WriteLine($"Current stones count: {CapturedStones}");
         _stone = new Stone(StoneColour);
 
         EndMove();
