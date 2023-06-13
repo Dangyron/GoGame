@@ -16,7 +16,7 @@ public static class StoneIndexerHelper
     
     public static bool IsValidIndex(this StoneIndexer indexer)
     {
-        return indexer.I is >= 0 and < Constants.CountOfCells &&
-               indexer.J is >= 0 and < Constants.CountOfCells;
+        return indexer.I  >= 0 && indexer.I < Constants.CountOfCells &&
+               indexer.J  >= 0 && indexer.J < Constants.CountOfCells;
     }
 }

@@ -6,5 +6,5 @@ public static partial class Constants
 {
     public static double WindowWidth { get; set; } = 1920;
     public static double WindowHeight { get; set; } = 1080;
-    public static Brush BoardBackGroundColour { get; } = new SolidColorBrush(Color.FromRgb(220,179,92));
+    public static Brush BoardBackGroundColour { get; set; } = new SolidColorBrush(Color.FromRgb(220,179,92));
 }

@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:GoGameApp"
              StartupUri="Windows/StartUpWindow.xaml">
     <Application.Resources>
-         
+         <BitmapImage x:Key="Icon" UriSource="D:\riderRepos\GoGame\GoGame.Utility\Images\icon.jpg"/>
     </Application.Resources>
 </Application>

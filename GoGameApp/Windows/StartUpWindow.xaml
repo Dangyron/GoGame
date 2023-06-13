@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStyle="ThreeDBorderWindow"
         SizeChanged="StartUpWindow_OnSizeChanged"
-        Icon="https://thumbs.dreamstime.com/z/print-177674051.jpg"
+        Icon="{StaticResource Icon}"
         WindowStartupLocation="CenterScreen"
         Title="Go" Height="780" Width="1440"
         MinHeight="780" MinWidth="1440">

@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using GoGame.Utility;
 using GoGame.Utility.Constants;
 
@@ -39,6 +42,16 @@ public static class StonesHelper
             };
         
         return Constants.EmptyStone;
+    }
+    
+    public static Ellipse ConvertStonesColourToEllipse(this StonesStates stonesState)
+    {
+        return new Ellipse
+        {
+            Width = Constants.StoneSize,
+            Height = Constants.StoneSize,
+            Fill = stonesState.ConvertStonesColourToBrush()
+        };
     }
     
     public static StoneIndexer ConvertPositionToIndexers(this Point point)

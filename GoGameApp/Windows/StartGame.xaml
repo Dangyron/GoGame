@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         ResizeMode="NoResize"
-        Icon="https://thumbs.dreamstime.com/z/print-177674051.jpg"
+        Icon="{StaticResource Icon}"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="StartGame" Height = "260" Width="300">
