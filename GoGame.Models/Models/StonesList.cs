@@ -19,6 +19,20 @@ public class StonesList : ICloneable
 
     public int Count => _stones.Count;
 
+    public int CountOfStones
+    {
+        get
+        {
+            int count = 0;
+            foreach (var col in _stones)
+            {
+                count += col.Count(i => i.StoneStates != StonesStates.Empty);
+            }
+
+            return count;
+        }
+    }
+    
     public void Place(StoneIndexer index, Stone stone)
     {
         _stones[index.I][index.J] = stone;

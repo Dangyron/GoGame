@@ -1,0 +1,16 @@
+﻿<Page x:Class="GoGameApp.Pages.AdditionalInfoPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:GoGameApp.Pages"
+      mc:Ignorable="d"
+      Title="AdditionalInfoPage" Height="450" Width="800">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Click="Button1_OnClick" Name="Button1" Width="200" Height="50" Margin="0, 0, 0, 10" Content="Rules" FontSize="16"/>
+            <Button Click="Button2_OnClick" Name="Button2" Width="200" Height="50" Margin="0, 0, 0, 10" Content="Controls" FontSize="16"/>
+            <Button Click="Button3_OnClick" Name="Button3" Width="200" Height="50" Margin="0, 0, 0, 10" Content="Return" FontSize="16"/>
+        </StackPanel>
+    </Grid>
+</Page>

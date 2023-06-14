@@ -19,7 +19,7 @@ public partial class SettingsPage
         LineColourChooser.Text = _settingDto.LineColour;
         BackColourChooser.Text = _settingDto.BoardColour;
         CheckNeededComboItem();
-        Board.DrawTestBoard(10, 10, 3, BoardExample);
+        Board.DrawTestBoard(60, 10, 3, BoardExample);
     }
 
     private void CheckNeededComboItem()
@@ -60,7 +60,7 @@ public partial class SettingsPage
     private void DrawTestBoard()
     {
         BoardExample.Children.Clear();
-        Board.DrawTestBoard(10, 10, 3, BoardExample);
+        Board.DrawTestBoard(60, 10, 3, BoardExample);
     }
 
     private void BackColourChooser_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -133,17 +133,9 @@ public partial class SettingsPage
         TextWarning.Visibility = b ? Visibility.Visible : Visibility.Hidden;
     }
 
-    private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
-    {
-        var radio = (RadioButton)sender;
-
-        _settingDto.StoneType = radio.Content.ToString()!.ToLower();
-        SettingsReadWriter.WriteToFile(_settingDto);
-    }
-
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
-        bool isNeedToClear = StartUpWindow.IsFirstLoad;
+        bool isNeedToClear = !StartUpWindow.IsGameLoaded;
         if (_size != -1 && _size != SettingsReadWriter.GetCountOfCellsFromFile())
         {
             Constants.CountOfCells = _size;
@@ -151,9 +143,23 @@ public partial class SettingsPage
             SettingsReadWriter.WriteToFile(_settingDto);
             ReadWriteHelper.ClearAllData();
             isNeedToClear = true;
-            StartUpWindow.IsFirstLoad = true;
+            StartUpWindow.IsGameLoaded = true;
         }
 
+        if (Application.Current.MainWindow is not StartUpWindow mainWindow)
+            return;
+
+        var page = new StartUpPage(isNeedToClear);
+        mainWindow.Content = page;
+        mainWindow.BindAllButtons(page);
+        mainWindow.Show();
+    }
+
+    private void Reset_OnClick(object sender, RoutedEventArgs e)
+    {
+        bool isNeedToClear = StartUpWindow.IsGameLoaded;
+        SettingsReadWriter.Clear();
+        
         if (Application.Current.MainWindow is not StartUpWindow mainWindow)
             return;
 

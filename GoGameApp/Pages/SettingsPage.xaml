@@ -5,39 +5,58 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d">
-    
+
     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,10">
-            <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,10" Width="320">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
                 <TextBlock Text="Choose size of board:" Margin="5, 5, 5, 0" FontSize="16" />
-                <ComboBox Name="BoardSizeChooser" SelectedIndex="3"
-                          SelectionChanged="BoardSizeChooser_OnSelectionChanged" FontSize="16" Margin="5, 5, 5, 0">
+                <ComboBox Grid.Column="1" HorizontalAlignment="Right" Width="90" Name="BoardSizeChooser"
+                          SelectedIndex="3"
+                          SelectionChanged="BoardSizeChooser_OnSelectionChanged" FontSize="16" Margin="5, 5, 0, 0">
                     <ComboBoxItem Content="9x9" />
                     <ComboBoxItem Content="13x13" />
                     <ComboBoxItem Content="15x15" />
                     <ComboBoxItem Content="19x19" />
                 </ComboBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Choose background colour:" Margin="5, 5, 5, 0" FontSize="16" />
-                <xctk:MaskedTextBox Name="BackColourChooser" Mask="999,999,999"
-                                    TextChanged="BackColourChooser_OnTextChanged" FontSize="16" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Choose line's colour:" Margin="5, 5, 5, 0" FontSize="16" />
-                <xctk:MaskedTextBox Name="LineColourChooser" Mask="999,999,999"
-                                    TextChanged="LineColourChooser_OnTextChanged" FontSize="16" />
-            </StackPanel>
-            <!--<StackPanel Orientation="Horizontal">
-                <TextBlock Text="Choose type of stones:" Margin="5, 5, 5, 0" FontSize="16" />
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                    <RadioButton Content="Circle" Checked="ToggleButton_OnChecked" FontSize="16" Margin="0,0,5,0" />
-                    <RadioButton Content="Image" Checked="ToggleButton_OnChecked" FontSize="16" />
-                </StackPanel>
-            </StackPanel>-->
-            <TextBlock Name="TextWarning" FontSize="16" Visibility="Hidden" Margin="0, 10, 0, 5" Text="Warning!!! If you click submit, your board will be cleared!" Foreground="Red"></TextBlock>
-            <Button Name="Submit" Content="Submit" Width="80" Height="30" Click="ButtonBase_OnClick"></Button>
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Choose background colour:" Margin="5, 5, 0, 0" FontSize="16" />
+                <xctk:MaskedTextBox Grid.Column="1" HorizontalAlignment="Right" Width="90" Name="BackColourChooser"
+                                    Mask="999,999,999"
+                                    TextChanged="BackColourChooser_OnTextChanged" FontSize="16" Margin="5, 5, 0, 0" />
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Choose line's colour:" Margin="5, 5, 0, 0" FontSize="16" />
+                <xctk:MaskedTextBox Grid.Column="1" HorizontalAlignment="Right" Width="90" Name="LineColourChooser"
+                                    Mask="999,999,999"
+                                    TextChanged="LineColourChooser_OnTextChanged" FontSize="16" Margin="5, 5, 0, 0" />
+            </Grid>
+
+            <TextBlock Name="TextWarning" FontSize="16" Visibility="Hidden" Margin="0, 10, 0, 5"
+                       Text="Warning!!! If you click submit, your board will be cleared!" Foreground="Red" />
+
+            <Button Name="Submit" FontSize="16" Content="Submit" Width="80" Height="30" Click="ButtonBase_OnClick"
+                    Margin="0, 10, 0, 5" />
+            <Button Name="Reset"  FontSize="16" Background="Red" Content="Reset" Width="80" Height="30" Margin="0, 5, 0, 0"
+                    Click="Reset_OnClick" />
         </StackPanel>
-        <Canvas Name="BoardExample"/>
+        <Canvas Name="BoardExample" />
     </DockPanel>
 </Page>

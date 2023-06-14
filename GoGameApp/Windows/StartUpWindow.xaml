@@ -9,6 +9,6 @@
         SizeChanged="StartUpWindow_OnSizeChanged"
         Icon="{StaticResource Icon}"
         WindowStartupLocation="CenterScreen"
-        Title="Go" Height="780" Width="1440"
-        MinHeight="780" MinWidth="1440">
+        Title="Go" Height="780" Width="960"
+        MinHeight="780" MinWidth="960">
 </Window>

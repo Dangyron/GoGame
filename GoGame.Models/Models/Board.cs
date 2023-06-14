@@ -11,8 +11,8 @@ namespace GoGame.Models.Models;
 public class Board
 {
     private readonly StonesList _stones;
-    private readonly List<StonesGroup> _groups;
-    public event Action<int>? StoneCaptured;
+    private static List<StonesGroup> _groups;
+    public Action<int>? StoneCaptured;
     public Canvas BoardCanvas { get; }
 
     public Dictionary<StonesStates, int> Score => _stones.ComputingScore();
@@ -20,9 +20,10 @@ public class Board
     {
         BoardCanvas = boardCanvas;
         _stones = new BoardReadWriter().ReadFromFile();
-        _groups = new List<StonesGroup>();
-    }
 
+        _groups = new GroupsReadWriter().ReadFromFile();
+    }
+    
     public bool ContainsStoneAtThisPosition(Point position)
     {
         var indexer = position.ConvertPositionToIndexers();
@@ -40,7 +41,7 @@ public class Board
         {
             var verticalLine = new Line
             {
-                X1 = i * Constants.CellSize + y,
+                X1 = i * Constants.CellSize + x,
                 Y1 = y,
                 X2 = i * Constants.CellSize + x,
                 Y2 = currLineLength + y,
@@ -132,6 +133,7 @@ public class Board
             _groups.RemoveAll(i => i.Count == 0);
             
             new BoardReadWriter().WriteToFile(_stones);
+            new GroupsReadWriter().WriteToFile(_groups);
             return true;
         }
 

@@ -54,12 +54,20 @@ public class GameController
 
     private void OnResign(object sender, RoutedEventArgs e)
     {
+        var res = MessageBox.Show(Application.Current.MainWindow, "Are you sure, that you want to resign", "Resign",
+            MessageBoxButton.YesNo);
+
+        if (res == MessageBoxResult.No)
+        {
+            return;
+        }
+        
         var button = sender as Button;
         var winner = _players.GetEnemyColour(button!.Name == "Black" ? StonesStates.Black : StonesStates.White);
         _players.Single(i => i.StoneColour != winner).OnResign(new object(), new RoutedEventArgs());
         _players.Single(i => i.StoneColour == winner).StopMoving();
         
-        Notification.CongratulationWinner(_players.Single(i => i.StoneColour == winner).Name, winner);
+        Notification.CongratulationWinner(_players.Select(i => i.Name).ToArray(), _board.Score);
     }
 
     private void InitPlayers(PlayerDataEventArgs startGame)
@@ -93,7 +101,6 @@ public class GameController
         if (new PlayerReadWriter().ReadFromFile() == StonesStates.Black)
             Array.Reverse(_players);
         
-        
         while (true)
         {
             try
@@ -115,7 +122,7 @@ public class GameController
                     return;
         
                 _cancellationTokenSource.Dispose();
-                StartUpWindow.IsFirstLoad = true;
+                StartUpWindow.IsGameLoaded = true;
                 _startGame = null;
                 
                 var page = new StartUpPage(false);
@@ -139,7 +146,7 @@ public class GameController
                     ? _players[1]
                     : _players[0];
                 Notification.ShowScore(_board.Score);
-                Notification.CongratulationWinner(winner.Name, winner.StoneColour);
+                Notification.CongratulationWinner(_players.Select(i => i.Name).ToArray(), _board.Score);
             }
 
             _cancellationTokenSource.Cancel();

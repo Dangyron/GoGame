@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
@@ -85,10 +86,14 @@ public class Player : IPlayer
 
     private void StartMove()
     {
-        _board.StoneCaptured += AddCapturedStones;
-        _board.BoardCanvas.MouseMove += MouseMoveHandler;
-        _board.BoardCanvas.MouseLeftButtonDown += LeftButtonClickHandler;
-        _board.BoardCanvas.MouseRightButtonDown += RightButtonClickHandler;
+        int count = _board.StoneCaptured?.GetInvocationList().Length ?? 0;
+        if (count == 0)
+        {
+            _board.StoneCaptured += AddCapturedStones;
+            _board.BoardCanvas.MouseMove += MouseMoveHandler;
+            _board.BoardCanvas.MouseLeftButtonDown += LeftButtonClickHandler;
+            _board.BoardCanvas.MouseRightButtonDown += RightButtonClickHandler;
+        }
     }
 
     private void AddCapturedStones(int count)

@@ -1,10 +1,16 @@
 ﻿namespace GoGameApp.Pages;
 
-public partial class StartUpPage : Page
+public partial class StartUpPage
 {
-    public StartUpPage(bool isFirst)
+    public StartUpPage(bool isStarted)
     {
         InitializeComponent();
-        Button1.Content = isFirst ? "Start game" : "Continue Game";
+        ShowContinue(isStarted);
+    }
+
+    public void ShowContinue(bool isNotStarted)
+    {
+        Button0.Height = isNotStarted ? 0 : 50;
+        Button0.Visibility = isNotStarted ? Visibility.Hidden : Visibility.Visible;
     }
 }
